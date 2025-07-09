@@ -23,9 +23,9 @@ tasks {
 }
 
 dependencies {
-//    compileOnly(libs.android.gradlePlugin)
-//    compileOnly(libs.kotlin.gradlePlugin)
-//    compileOnly(libs.kotlin.compose.gradlePlugin)
+    compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.kotlin.compose.gradlePlugin)
 //    compileOnly(libs.kotlinx.kover.gradlePlugin)
 //    compileOnly(libs.google.ksp.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
@@ -33,7 +33,7 @@ dependencies {
 //    compileOnly(libs.compose.gradlePlugin)
 //    compileOnly(libs.licensee.gradlePlugin)
 //    compileOnly(libs.aboutlibraries.gradlePlugin)
-//    compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
+    compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
 //    detektPlugins(libs.nlopez.compose.rules.detekt)
 //    detektPlugins(libs.arturbosch.detektFormatting)
 }
@@ -63,6 +63,9 @@ gradlePlugin {
     plugins {
         register(libs.plugins.emptyPlugin) {
             implementationClass = "com.sorrowblue.comicviewer.pdf.plugin.EmptyPlugin"
+        }
+        register(libs.plugins.detektPlugin) {
+            implementationClass = "com.sorrowblue.comicviewer.pdf.plugin.DetektConventionPlugin"
         }
     }
 }
