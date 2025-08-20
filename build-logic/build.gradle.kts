@@ -23,7 +23,7 @@ tasks {
 }
 
 dependencies {
-    compileOnly(libs.android.gradlePlugin)
+//    compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.kotlin.compose.gradlePlugin)
 //    compileOnly(libs.kotlinx.kover.gradlePlugin)
