@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.detektPlugin)
+    id("com.mikepenz.aboutlibraries.plugin") version "12.2.3"
 }
 
 kotlin {
@@ -27,6 +28,10 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+            implementation("com.sorrowblue.mupdf:mupdf-kmp-android:0.0.1-SNAPSHOT")
+            implementation("com.mikepenz:aboutlibraries-compose-m3:12.2.3")
+            implementation("androidx.navigation:navigation-compose:2.9.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -49,11 +54,11 @@ kotlin {
 }
 
 android {
-    namespace = "org.sorrowblue.comicviewer.pdf"
+    namespace = "com.sorrowblue.comicviewer.pdf"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "org.sorrowblue.comicviewer.pdf"
+        applicationId = "com.sorrowblue.comicviewer.pdf"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
