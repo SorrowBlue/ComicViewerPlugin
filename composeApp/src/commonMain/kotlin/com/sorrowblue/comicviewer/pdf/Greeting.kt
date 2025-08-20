@@ -1,4 +1,4 @@
-package org.example.project
+package com.sorrowblue.comicviewer.pdf
 
 class Greeting {
     private val platform = getPlatform()

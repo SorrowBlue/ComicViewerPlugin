@@ -1,4 +1,4 @@
-package org.example.project
+package com.sorrowblue.comicviewer.pdf
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -6,7 +6,7 @@ import androidx.compose.ui.window.application
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "KotlinProject",
+        title = "ComicViewerPdf",
     ) {
         App()
     }
