@@ -1,4 +1,6 @@
-rootProject.name = "ComicViewerPdf"
+@file:Suppress("UnstableApiUsage")
+
+rootProject.name = "ComicViewerPlugin"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -27,9 +29,6 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-        maven {
-            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-        }
     }
 }
 
@@ -37,4 +36,4 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-include(":composeApp")
+include(":pdf")

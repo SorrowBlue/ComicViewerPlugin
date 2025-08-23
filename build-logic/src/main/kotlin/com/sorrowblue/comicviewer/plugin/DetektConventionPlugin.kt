@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.pdf.plugin
+package com.sorrowblue.comicviewer.plugin
 
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
@@ -16,6 +16,7 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 
+@Suppress("unused")
 internal class DetektConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
@@ -25,8 +26,8 @@ internal class DetektConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                detektPlugins(libs.nlopez.compose.rules.detekt)
-                detektPlugins(libs.arturbosch.detektFormatting)
+                detektPlugins(libs.detekt.compose)
+                detektPlugins(libs.detekt.formatting)
             }
 
             configure<DetektExtension> {
@@ -57,7 +58,6 @@ internal class DetektConventionPlugin : Plugin<Project> {
             mapOf(
                 "detektAndroidAll" to "(?i)^(?!.*metadata).*android.*$".toRegex(),
                 "detektDesktopAll" to "(?i)^(?!.*metadata).*desktop.*$".toRegex(),
-                "detektIosAll" to "(?i)^(?!.*metadata).*ios.*$".toRegex(),
                 "detektMetadataAll" to "(?i)^.*metadata.*$".toRegex()
             ).forEach { (taskName, regex) ->
                 tasks.register(taskName) {

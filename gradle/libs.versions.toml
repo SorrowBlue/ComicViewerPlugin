@@ -27,12 +27,16 @@ android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", ver
 kotlin-compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 mupdf-kmp = { group = "com.sorrowblue.mupdf", name = "mupdf-kmp", version = "1.0.0" }
+compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "composeMultiplatform" }
 
 [plugins]
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
-detektPlugin = { id = "com.sorrowblue.comicviewer.pdf.plugin.detekt" }
+comicviewer-lint = { id = "com.sorrowblue.comicviewer.plugin.lint" }
+comicviewer-detekt = { id = "com.sorrowblue.comicviewer.plugin.detekt" }
+comicviewer-gitTagVersion = { id = "com.sorrowblue.comicviewer.plugin.git-tag-version" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }
 androidApplication = { id = "com.android.application", version.ref = "android-gradle" }
+androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

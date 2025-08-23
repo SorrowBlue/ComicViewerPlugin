@@ -1,18 +1,39 @@
-*.iml
+#########
+# https://github.com/github/gitignore/blob/main/Gradle.gitignore
 .gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+**/build/
+!**/src/**/build/
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+#########
+#########
+# https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+# User-specific stuff
+.idea/**/workspace.xml
+# Gradle
+.idea/**/gradle.xml
+# Gradle and Maven with auto-import
+.idea/artifacts
+.idea/modules.xml
+.idea/modules
+########
+########
+# User
+.idea/kotlinc.xml
+.idea/deviceManager.xml
+.idea/migrations.xml
+.idea/deploymentTargetSelector.xml
+.idea/assetWizardSettings.xml
+.idea/appInsightsSettings.xml
+.idea/AndroidProjectSystem.xml
+.idea/.name
+.idea/runConfigurations.xml
+.idea/misc.xml
+.idea/caches
+
 local.properties
 
-# プロジェクトの除外パス
-/composeApp/build/
+pdf/ComicViewer
+resources/**/*.jar
