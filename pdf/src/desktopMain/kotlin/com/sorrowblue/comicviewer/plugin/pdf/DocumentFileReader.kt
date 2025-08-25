@@ -6,7 +6,10 @@ import com.artifex.mupdf.fitz.DrawDevice
 import com.artifex.mupdf.fitz.Matrix
 import com.artifex.mupdf.fitz.Pixmap
 import com.artifex.mupdf.fitz.SeekableInputStream
+import java.io.File
 import java.io.OutputStream
+import java.lang.reflect.Constructor
+import java.net.URLClassLoader
 
 interface ISeekableInputStream {
 
@@ -19,12 +22,52 @@ interface ISeekableInputStream {
     fun close()
 }
 
-internal interface FileReader {
+interface FileReader {
     fun pageCount(): Int
     fun loadPage(pageIndex: Int, outputStream: OutputStream)
     fun fileSize(pageIndex: Int): Long
 
     fun close()
+}
+
+object PdfPlugin {
+
+    @Volatile
+    private var readerClass: Constructor<out Any>? = null
+
+    @Synchronized
+    fun init() {
+        if (readerClass != null) return
+        val resourcesDir = File(System.getProperty("compose.application.resources.dir"))
+        val jarFile = resourcesDir.resolve("ComicViewer-PDF-plugin-windows-x64-0.0.0.jar")
+        val classLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()))
+        runCatching {
+            val fqn = "com.sorrowblue.mupdf.kmp.MuPDF"
+            val singletonClass = classLoader.loadClass(fqn)
+            val instance = singletonClass.getField("INSTANCE").get(null)
+            val methodWithoutArgs = singletonClass.getMethod("init")
+            methodWithoutArgs.invoke(instance)
+            println("Success MuPDF init")
+        }.onFailure {
+            println("Error MuPDF error")
+            it.printStackTrace()
+        }
+        runCatching {
+            readerClass = classLoader.loadClass("com.sorrowblue.comicviewer.plugin.pdf.DocumentFileReader").constructors.first()
+            println("Success DocumentFileReader")
+        }.onFailure {
+            println("Error DocumentFileReader")
+            it.printStackTrace()
+        }
+    }
+
+    @Synchronized
+    fun getReader(seekableInputStream: ISeekableInputStream, magic: String): FileReader {
+        return readerClass!!.newInstance(
+            seekableInputStream,
+            magic
+        ) as FileReader
+    }
 }
 
 

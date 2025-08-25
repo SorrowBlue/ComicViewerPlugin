@@ -1,9 +1,10 @@
-package com.sorrowblue.comicviewer.pdf
+package com.sorrowblue.comicviewer.plugin.pdf
 
-import com.sorrowblue.comicviewer.pdf.aidl.ISeekableInputStream
+import com.artifex.mupdf.fitz.SeekableInputStream
+import com.sorrowblue.comicviewer.plugin.aidl.ISeekableInputStream
 
 internal class MupdfSeekableInputStreamImpl(private val seekableInputStream: ISeekableInputStream) :
-    com.artifex.mupdf.fitz.SeekableInputStream {
+    SeekableInputStream {
 
     override fun read(buf: ByteArray) = seekableInputStream.read(buf)
 

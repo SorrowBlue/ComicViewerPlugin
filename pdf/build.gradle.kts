@@ -55,15 +55,15 @@ kotlin {
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer.pdf"
+    namespace = "com.sorrowblue.comicviewer.plugin.pdf"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.sorrowblue.comicviewer.pdf"
+        applicationId = "com.sorrowblue.comicviewer.plugin.pdf"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "1.0"
+        versionName = version.toString()
     }
     androidResources {
         generateLocaleConfig = true
@@ -102,7 +102,6 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = ".debug"
             isMinifyEnabled = false
             isShrinkResources = false
             signingConfig = signingConfigs.findByName(name)
@@ -111,6 +110,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             signingConfig = signingConfigs.findByName(name)
+            ndk.debugSymbolLevel = "FULL"
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -119,6 +119,7 @@ android {
     }
     buildFeatures {
         aidl = true
+        buildConfig = true
     }
 }
 
@@ -141,7 +142,7 @@ compose.desktop {
                 "SorrowBlue"
             packageVersion = parseVersionForDesktop(version.toString())
             outputBaseDir = file("ComicViewer")
-            appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("desktopResources"))
             linux {
                 iconFile = File("icon/linux/appIcon.png")
                 installationPath = "ComicViewer"
@@ -152,7 +153,7 @@ compose.desktop {
                 iconFile = File("icon/windows/appIcon.ico")
                 installationPath = "ComicViewer"
                 dirChooser = true
-                perUserInstall = true
+//                perUserInstall = true
                 menuGroup = "ComicViewer"
                 upgradeUuid = "F5DB26A2-175B-446C-9EDA-50ACACCB6F8E"
                 shortcut = true

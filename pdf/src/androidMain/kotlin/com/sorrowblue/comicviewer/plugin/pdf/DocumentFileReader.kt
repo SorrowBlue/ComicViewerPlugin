@@ -1,22 +1,24 @@
-package com.sorrowblue.comicviewer.pdf
+package com.sorrowblue.comicviewer.plugin.pdf
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.core.content.FileProvider
 import com.artifex.mupdf.fitz.Document
 import com.artifex.mupdf.fitz.android.AndroidDrawDevice
-import com.sorrowblue.comicviewer.pdf.aidl.FileReader
-import com.sorrowblue.comicviewer.pdf.aidl.IOutputStream
-import com.sorrowblue.comicviewer.pdf.aidl.ISeekableInputStream
-import java.io.OutputStream
+import com.sorrowblue.comicviewer.plugin.aidl.FileReader
+import com.sorrowblue.comicviewer.plugin.aidl.ISeekableInputStream
 import kotlin.random.Random
 
 internal class DocumentFileReader(
-    private val context: android.content.Context,
+    private val context: Context,
     private val seekableInputStream: ISeekableInputStream,
     magic: String,
+    private val compressFormat: Int,
+    private val quality: Int,
 ) : FileReader.Stub() {
+
     init {
         Log.d("DocumentFileReader", "init $this")
     }
@@ -33,11 +35,21 @@ internal class DocumentFileReader(
     override fun fileSize(pageIndex: Int) = 0L
 
     override fun loadPage(pageIndex: Int): String? {
-//        JavaOutputStream(stream).use {
+        return loadPageWithFortmat(pageIndex, compressFormat, quality)
+    }
+
+    override fun loadPageWithFortmat(pageIndex: Int, format: Int, quality: Int): String? {
+        val compressFormat = when (format) {
+            0 -> Bitmap.CompressFormat.JPEG
+            1 -> Bitmap.CompressFormat.PNG
+            3 -> Bitmap.CompressFormat.WEBP_LOSSY
+            4 -> Bitmap.CompressFormat.WEBP_LOSSLESS
+            else -> Bitmap.CompressFormat.JPEG
+        }
         val file = dir.resolve("${pageIndex}.webp")
         file.outputStream().use {
             AndroidDrawDevice.drawPageFitWidth(document.loadPage(pageIndex), 600)
-                .compress(Bitmap.CompressFormat.WEBP_LOSSY, 50, it)
+                .compress(compressFormat, quality, it)
         }
         val authority = "${context.packageName}.fileprovider"
         val fileUri = FileProvider.getUriForFile(
@@ -48,28 +60,19 @@ internal class DocumentFileReader(
         val callingPackage = context.packageManager.getNameForUid(getCallingUid())
 
         if (callingPackage != null) {
-            // 読み取り権限を明示的に付与
             context.grantUriPermission(
                 callingPackage,
                 fileUri,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
         } else {
-            // エラーハンドリング (通常は発生しない)
             throw SecurityException("Calling package could not be identified.")
         }
         return fileUri.toString()
-//        }
     }
 
     override fun close() {
         Log.d("DocumentFileReader", "close")
         seekableInputStream.close()
     }
-}
-
-class JavaOutputStream(private val outputStream: IOutputStream) : OutputStream() {
-    override fun write(b: Int) = outputStream.write(b)
-    override fun flush() = outputStream.flush()
-    override fun close() = outputStream.close()
 }

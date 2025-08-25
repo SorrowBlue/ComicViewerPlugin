@@ -32,8 +32,9 @@
 .idea/runConfigurations.xml
 .idea/misc.xml
 .idea/caches
+.idea/shelf
 
 local.properties
 
 pdf/ComicViewer
-resources/**/*.jar
+pdf/**/resources/**/*.jar

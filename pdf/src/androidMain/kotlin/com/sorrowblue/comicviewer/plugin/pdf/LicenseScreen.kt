@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.pdf
+package com.sorrowblue.comicviewer.plugin.pdf
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

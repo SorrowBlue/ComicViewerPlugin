@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.pdf
+package com.sorrowblue.comicviewer.plugin.pdf
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
