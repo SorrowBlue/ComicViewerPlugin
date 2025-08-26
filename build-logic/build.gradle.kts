@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.detekt)
 }
 
-group = "com.sorrowblue.comicviewer.pdf.buildlogic"
+group = "com.sorrowblue.comicviewer.plugin.buildlogic"
 
 kotlin {
     jvmToolchain {
@@ -23,19 +23,13 @@ tasks {
 }
 
 dependencies {
+    compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
-    compileOnly(libs.kotlin.compose.gradlePlugin)
-//    compileOnly(libs.kotlinx.kover.gradlePlugin)
-//    compileOnly(libs.google.ksp.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
-//    compileOnly(libs.dokka.gradlePlugin)
-//    compileOnly(libs.compose.gradlePlugin)
-//    compileOnly(libs.licensee.gradlePlugin)
-//    compileOnly(libs.aboutlibraries.gradlePlugin)
-    compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
-//    detektPlugins(libs.nlopez.compose.rules.detekt)
-//    detektPlugins(libs.arturbosch.detektFormatting)
+    compileOnly(libs.compose.gradlePlugin)
+    detektPlugins(libs.detekt.compose)
+    detektPlugins(libs.detekt.formatting)
 }
 
 detekt {
@@ -61,16 +55,18 @@ tasks.register("detektAll") {
 
 gradlePlugin {
     plugins {
-        register(libs.plugins.emptyPlugin) {
-            implementationClass = "com.sorrowblue.comicviewer.pdf.plugin.EmptyPlugin"
+        register(libs.plugins.comicviewer.detekt) {
+            implementationClass = "com.sorrowblue.comicviewer.plugin.DetektConventionPlugin"
         }
-        register(libs.plugins.detektPlugin) {
-            implementationClass = "com.sorrowblue.comicviewer.pdf.plugin.DetektConventionPlugin"
+        register(libs.plugins.comicviewer.gitTagVersion) {
+            implementationClass = "com.sorrowblue.comicviewer.plugin.GitTagVersionPlugin"
+        }
+        register(libs.plugins.comicviewer.lint) {
+            implementationClass = "com.sorrowblue.comicviewer.plugin.AndroidLintConventionPlugin"
         }
     }
 }
 
-// Temporarily set to PushMode only
 private val currentLibs get() = libs
 
 private fun NamedDomainObjectContainer<PluginDeclaration>.register(
