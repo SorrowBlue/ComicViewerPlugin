@@ -1,4 +1,5 @@
 import com.android.build.api.variant.VariantOutput
+import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -11,6 +12,7 @@ plugins {
     alias(libs.plugins.comicviewer.detekt)
     alias(libs.plugins.comicviewer.gitTagVersion)
     alias(libs.plugins.comicviewer.lint)
+    alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
@@ -127,6 +129,24 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
+buildkonfig {
+    packageName = "om.sorrowblue.comicviewer.pdf"
+    defaultConfigs {
+        buildConfigField(
+            type = FieldSpec.Type.STRING,
+            name = "VERSION_NAME",
+            value = version.toString(),
+            const = true
+        )
+        buildConfigField(
+            FieldSpec.Type.LONG,
+            "TIMESTAMP",
+            System.currentTimeMillis().toString(),
+            const = true
+        )
+    }
+}
+
 compose.desktop {
     application {
         mainClass = "com.sorrowblue.comicviewer.plugin.pdf.MainKt"
@@ -141,19 +161,17 @@ compose.desktop {
             vendor =
                 "SorrowBlue"
             packageVersion = parseVersionForDesktop(version.toString())
-            outputBaseDir = file("ComicViewer")
-            appResourcesRootDir.set(project.layout.projectDirectory.dir("desktopResources"))
+            outputBaseDir = file("ComicViewerPDF")
             linux {
                 iconFile = File("icon/linux/appIcon.png")
-                installationPath = "ComicViewer"
+                installationPath = "ComicViewerPDF"
                 debMaintainer = "sorrowblue.dev@gmail.com"
                 menuGroup = "sorrowblue-comicViewer"
             }
             windows {
                 iconFile = File("icon/windows/appIcon.ico")
-                installationPath = "ComicViewer"
+                installationPath = "ComicViewerPDF"
                 dirChooser = true
-//                perUserInstall = true
                 menuGroup = "ComicViewer"
                 upgradeUuid = "F5DB26A2-175B-446C-9EDA-50ACACCB6F8E"
                 shortcut = true

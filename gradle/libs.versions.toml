@@ -6,6 +6,7 @@ android-targetSdk = "36"
 androidx-activity = "1.10.1"
 androidx-lifecycle = "2.9.2"
 aboutlibraries = "12.2.4"
+buildkonfig = "0.17.1"
 kotlin = "2.2.10"
 composeHotReload = "1.0.0-beta05"
 composeMultiplatform = "1.8.2"
@@ -31,6 +32,7 @@ compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.
 
 [plugins]
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 comicviewer-lint = { id = "com.sorrowblue.comicviewer.plugin.lint" }
 comicviewer-detekt = { id = "com.sorrowblue.comicviewer.plugin.detekt" }
 comicviewer-gitTagVersion = { id = "com.sorrowblue.comicviewer.plugin.git-tag-version" }

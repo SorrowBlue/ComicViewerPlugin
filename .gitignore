@@ -33,8 +33,10 @@
 .idea/misc.xml
 .idea/caches
 .idea/shelf
+.idea/ComicViewerPdf.iml
+.idea/copilot**.xml
 
 local.properties
 
-pdf/ComicViewer
-pdf/**/resources/**/*.jar
+pdf/ComicViewerPdf
+*.aab

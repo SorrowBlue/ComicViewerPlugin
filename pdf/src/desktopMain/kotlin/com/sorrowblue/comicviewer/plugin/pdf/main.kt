@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.plugin.pdf
 
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import comicviewerplugin.pdf.generated.resources.Res
@@ -14,8 +13,5 @@ fun main() = application {
         icon = painterResource(Res.drawable.ic_product)
     ) {
         HomeScreen { }
-        LaunchedEffect(Unit) {
-            PdfPlugin.init()
-        }
     }
 }
