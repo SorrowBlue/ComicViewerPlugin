@@ -17,7 +17,9 @@ internal class PdfPluginImpl : PdfPlugin {
     override val timestamp = BuildKonfig.TIMESTAMP
 
     override fun init() {
-        MuPDF.init()
+        if (!MuPDF.isInitializedSuccessfully) {
+            MuPDF.init()
+        }
     }
 
     override fun getReader(
