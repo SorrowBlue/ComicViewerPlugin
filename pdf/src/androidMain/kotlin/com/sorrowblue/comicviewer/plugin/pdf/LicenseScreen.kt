@@ -16,7 +16,7 @@ fun LicenseScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Top,
     ) {
         // ライセンス一覧
         val libs by rememberLibraries()

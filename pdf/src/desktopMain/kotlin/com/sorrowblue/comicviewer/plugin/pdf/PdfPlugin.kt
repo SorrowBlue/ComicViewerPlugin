@@ -25,7 +25,5 @@ internal class PdfPluginImpl : PdfPlugin {
     override fun getReader(
         seekableInputStream: ISeekableInputStream,
         magic: String,
-    ): PdfFileReader {
-        return DocumentFileReader(seekableInputStream, magic)
-    }
+    ): PdfFileReader = DocumentFileReader(seekableInputStream, magic)
 }

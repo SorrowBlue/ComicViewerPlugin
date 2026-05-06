@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.IBinder
 import com.sorrowblue.comicviewer.plugin.aidl.CompressFormat
 import com.sorrowblue.comicviewer.plugin.aidl.FileReader
-import com.sorrowblue.comicviewer.plugin.pdf.aidl.IRemotePdfService
 import com.sorrowblue.comicviewer.plugin.aidl.ISeekableInputStream
+import com.sorrowblue.comicviewer.plugin.pdf.aidl.IRemotePdfService
 import com.sorrowblue.mupdf.kmp.MuPDF
 
 class PdfService : Service() {
@@ -16,36 +16,31 @@ class PdfService : Service() {
         MuPDF.init()
     }
 
-    override fun onBind(intent: Intent?): IBinder {
-        return binder
-    }
+    override fun onBind(intent: Intent?): IBinder = binder
 
     private val binder = object : IRemotePdfService.Stub() {
-        override fun getFIleReader(inputStream: ISeekableInputStream, magic: String): FileReader {
-            return DocumentFileReader(this@PdfService.applicationContext, inputStream, magic, compressFormat, quality)
-        }
+        override fun getFIleReader(inputStream: ISeekableInputStream, magic: String): FileReader =
+            DocumentFileReader(
+                this@PdfService.applicationContext,
+                inputStream,
+                magic,
+                compressFormat,
+                quality,
+            )
 
         private var compressFormat: Int = CompressFormat.JPEG
-        override fun getCompressFormat(): Int {
-            return compressFormat
-        }
+        override fun getCompressFormat(): Int = compressFormat
         override fun setCompressFormat(value: Int) {
             this.compressFormat = value
         }
 
         private var quality: Int = 100
-        override fun getQuality(): Int {
-            return quality
-        }
+        override fun getQuality(): Int = quality
         override fun setQuality(quality: Int) {
             this.quality = quality
         }
 
-        override fun getVersion(): String? {
-            return BuildConfig.VERSION_NAME
-        }
-        override fun getVersion2(): String? {
-            return BuildConfig.VERSION_NAME
-        }
+        override fun getVersion(): String? = BuildConfig.VERSION_NAME
+        override fun getVersion2(): String? = BuildConfig.VERSION_NAME
     }
 }

@@ -37,23 +37,23 @@ internal fun HomeScreen(
     onLicenseClick: () -> Unit = {},
     onLaunchAppClick: () -> Unit = {}, // Callback for launching the main app
 ) {
-    Scaffold { contentPadding ->
+    Scaffold(modifier = modifier) { contentPadding ->
         Column(
-            modifier = modifier.fillMaxSize().padding(contentPadding).padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize().padding(contentPadding).padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // アプリアイコン
             Image(
                 painter = painterResource(Res.drawable.ic_product),
                 contentDescription = "アプリアイコン",
-                modifier = Modifier.height(108.dp)
+                modifier = Modifier.height(108.dp),
             )
             Spacer(modifier = Modifier.height(16.dp))
             // 機能説明
             Text(
                 text = "このアプリはComicViewerのプラグインです。ComicViewerでPDFファイルを読み込むことができます。",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -63,28 +63,28 @@ internal fun HomeScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = "ホームランチャーにアイコンを表示",
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
                 )
                 var iconVisible by remember { mutableStateOf(true) } // 初期状態は表示
                 Switch(
                     checked = iconVisible,
                     onCheckedChange = {
                         iconVisible = it
-                        // TODO: ホームランチャーのアイコン表示/非表示を切り替えるロジックを実装します。
+                        // TODO(ホームランチャーのアイコン表示/非表示を切り替えるロジックを実装します。)
                         // Androidの場合、PackageManagerとComponentNameを使用して設定します。
                         // KMP Desktopの場合は、OS固有の方法で対応する必要があります。
-                    }
+                    },
                 )
             }
             Spacer(modifier = Modifier.height(16.dp)) // Adjusted spacer
 
             // ComicViewerアプリを起動ボタン
             OutlinedButton(onClick = {
-                // TODO: ComicViewerアプリ本体を起動するロジックを実装します。
+                // TODO(ComicViewerアプリ本体を起動するロジックを実装します。)
                 // Android: Intentを使用して特定のパッケージ名でアプリを起動
                 // Desktop: OS固有の方法でプロセスを起動 (Runtime.getRuntime().exec(...))
                 onLaunchAppClick()
@@ -97,12 +97,12 @@ internal fun HomeScreen(
             // ライセンスボタン
             OutlinedButton(
                 onClick = onLicenseClick,
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
             ) {
                 Icon(
                     imageVector = License,
                     contentDescription = null,
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                    modifier = Modifier.size(ButtonDefaults.IconSize),
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 Text("ライセンス")
@@ -113,7 +113,7 @@ internal fun HomeScreen(
 
 @Composable
 @Preview
-private fun PreviewHomeScreen() {
+private fun HomeScreenPreview() {
     MaterialTheme {
         HomeScreen()
     }

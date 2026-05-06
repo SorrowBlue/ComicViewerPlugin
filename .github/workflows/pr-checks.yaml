@@ -1,0 +1,70 @@
+name: PR Checks
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  # Check if this is a PR commit to main and skip if so
+  check-commit:
+    runs-on: ubuntu-latest
+    outputs:
+      should-run: ${{ steps.check.outputs.should-run }}
+    steps:
+      - name: Check if should run
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && \
+             [ "${{ github.event.head_commit.committer.name }}" = "GitHub" ]; then
+            echo "should-run=false" >> $GITHUB_OUTPUT
+            echo "Skipping workflow for PR commit to main"
+          else
+            echo "should-run=true" >> $GITHUB_OUTPUT
+            echo "Running workflow"
+          fi
+
+  static-code-analysis:
+    name: Static code analysis
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: ./.github/workflows/static-code-analysis.yml
+
+  #  android-lint:
+  #    name: Android lint
+  #    needs: check-commit
+  #    if: needs.check-commit.outputs.should-run == 'true'
+  #    uses: ./.github/workflows/lint.yml
+
+  #  build:
+  #    name: Build Validation
+  #    needs: [static-code-analysis, android-lint]
+  #    if: needs.check-commit.outputs.should-run == 'true'
+  #    uses: ./.github/workflows/build.yml
+
+  allchecks:
+    name: All Checks Passed
+    permissions:
+      checks: read
+      contents: read
+    needs: static-code-analysis
+    if: needs.check-commit.outputs.should-run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: wechuli/allcheckspassed@v2
+        with:
+          poll: false

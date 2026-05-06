@@ -8,7 +8,20 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
 }
 
-tasks.register("reportMerge", io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+val reportMerge = tasks.register("reportMerge", dev.detekt.gradle.report.ReportMergeTask::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
     output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
+}
+
+subprojects {
+    reportMerge {
+        input.from(
+            tasks.withType<dev.detekt.gradle.Detekt>()
+                .map { it.reports.sarif.outputLocation })
+    }
+}
+
+tasks.withType<UpdateDaemonJvm> {
+    vendor = JvmVendorSpec.ADOPTIUM
+    languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
 }
