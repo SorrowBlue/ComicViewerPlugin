@@ -20,6 +20,7 @@ aboutLibraries {
             mapOf(
                 "AGPL-3.0" to listOf("com.sorrowblue.mupdf"),
                 "GNU Affero General Public License version 3.0" to listOf("com.sorrowblue.mupdf"),
+                "Other" to listOf("org.jetbrains.kotlinx:atomicfu-jvm"),
             ),
         )
     }
