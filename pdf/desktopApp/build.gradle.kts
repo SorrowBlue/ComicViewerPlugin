@@ -45,7 +45,7 @@ compose.desktop {
             linux {
                 packageName = "comicviewerpdf"
                 iconFile = File("icon/linux/appIcon.png")
-                installationPath = "comicviewer-pdf"
+                installationPath = "comicviewerpdf"
                 debMaintainer = "sorrowblue.dev@gmail.com"
                 menuGroup = "sorrowblue-comicViewer"
             }
