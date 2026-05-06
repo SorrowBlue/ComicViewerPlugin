@@ -19,10 +19,6 @@ internal class DocumentFileReader(
     private val quality: Int,
 ) : FileReader.Stub() {
 
-    init {
-        Log.d("DocumentFileReader", "init $this")
-    }
-
     private val document =
         Document.openDocument(MupdfSeekableInputStreamImpl(seekableInputStream), magic)
 

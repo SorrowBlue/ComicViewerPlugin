@@ -1,30 +1,27 @@
 package com.sorrowblue.comicviewer.plugin.pdf
 
+import android.content.ActivityNotFoundException
+import android.content.ComponentName
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import comicviewerplugin.pdf.generated.resources.Res
-import comicviewerplugin.pdf.generated.resources.ic_product
-import org.jetbrains.compose.resources.painterResource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +37,21 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                     ) {
                         composable("home") {
-                            GreetingScreen(onLicenseClick = {
-                                navController.navigate("license")
-                            })
+                            var visibleIcon by remember { mutableStateOf(getLauncherIconVisible()) }
+                            HomeScreen(
+                                isAndroid = true,
+                                visibleIcon = visibleIcon,
+                                onLicenseClick = {
+                                    navController.navigate("license")
+                                },
+                                onLaunchAppClick = {
+                                    launchApp()
+                                },
+                                onVisibleChange = {
+                                    setLauncherIconVisible(it)
+                                    visibleIcon = getLauncherIconVisible()
+                                }
+                            )
                         }
                         composable("license") {
                             LicenseScreen()
@@ -52,44 +61,74 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier,
-    )
-}
-
-@Composable
-fun GreetingScreen(onLicenseClick: () -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        // アプリアイコン
-        Image(
-            painter = painterResource(Res.drawable.ic_product),
-            contentDescription = "アプリアイコン",
-            modifier = Modifier.height(108.dp),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        // アプリ説明
-        Text(
-            text = "ComicViewerPdfはPDF形式のコミックを快適に閲覧できるAndroidアプリです。",
-            style = MaterialTheme.typography.titleMedium,
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Greeting(name = "Android")
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(onClick = onLicenseClick) {
-            Text("ライセンス")
+    private fun launchApp() {
+        val isLaunched = runCatching {
+            var launched = false
+            for (pkg in targetPackages) {
+                val intent = packageManager.getLaunchIntentForPackage(pkg)
+                if (intent != null) {
+                    startActivity(intent)
+                    launched = true
+                    break
+                }
+            }
+            launched
+        }.onFailure {
+            Log.e(TAG, "Error: ${it.localizedMessage.orEmpty()}")
+        }.getOrDefault(false)
+        if (!isLaunched) {
+            openPlayStore(basePackageName)
         }
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-private fun GreetingPreview() {
-    MaterialTheme {
-        GreetingScreen({})
+    private fun openPlayStore(packageName: String) {
+        val marketUri = "market://details?id=$packageName".toUri()
+        val browserUri = "https://play.google.com/store/apps/details?id=$packageName".toUri()
+
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, marketUri).apply {
+                setPackage("com.android.vending")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Log.e(TAG, "Error: ${e.localizedMessage.orEmpty()}")
+            val intent = Intent(Intent.ACTION_VIEW, browserUri).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
+        }
+    }
+
+    private fun setLauncherIconVisible(visible: Boolean) {
+        val componentName =
+            ComponentName(this, "com.sorrowblue.comicviewer.plugin.pdf.LauncherAlias")
+        val newState = if (visible) {
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        } else {
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+        }
+
+        packageManager.setComponentEnabledSetting(
+            componentName,
+            newState,
+            PackageManager.DONT_KILL_APP
+        )
+    }
+
+    private fun getLauncherIconVisible(): Boolean {
+        val componentName =
+            ComponentName(this, "com.sorrowblue.comicviewer.plugin.pdf.LauncherAlias")
+        return packageManager.getComponentEnabledSetting(componentName) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
     }
 }
+
+private const val TAG = "MainActivity"
+
+private const val basePackageName = "com.sorrowblue.comicviewer"
+private val targetPackages = listOf(
+    "$basePackageName.debug",
+    "$basePackageName.prerelease",
+    basePackageName
+)

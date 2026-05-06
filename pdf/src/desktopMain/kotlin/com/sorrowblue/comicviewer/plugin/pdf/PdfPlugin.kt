@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.plugin.pdf
 
 import com.sorrowblue.mupdf.kmp.MuPDF
-import om.sorrowblue.comicviewer.pdf.BuildKonfig
 
 interface PdfPlugin {
     val version: String
@@ -13,8 +12,8 @@ interface PdfPlugin {
 
 internal class PdfPluginImpl : PdfPlugin {
 
-    override val version = BuildKonfig.VERSION_NAME
-    override val timestamp = BuildKonfig.TIMESTAMP
+    override val version = BuildConfig.VERSION_NAME
+    override val timestamp = BuildConfig.TIMESTAMP
 
     override fun init() {
         if (!MuPDF.isInitializedSuccessfully) {

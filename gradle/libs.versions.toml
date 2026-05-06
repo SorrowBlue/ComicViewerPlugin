@@ -1,14 +1,16 @@
 [versions]
 aboutlibraries = "12.2.4"
-android-compileSdk = "36"
+android-compileSdk = "37"
 android-gradle = "9.2.1"
 android-minSdk = "30"
-android-targetSdk = "36"
+android-targetSdk = "37"
 androidx-activity = "1.10.1"
+androidx-core = "1.18.0"
 androidx-lifecycle = "2.9.2"
-buildkonfig = "0.17.1"
-composeHotReload = "1.0.0-beta05"
-composeMultiplatform = "1.8.2"
+buildconfig = "6.0.9"
+composeHotReload = "1.1.0"
+composeMultiplatform = "1.10.3"
+compose-material3 = "1.11.0-alpha07"
 detekt = "2.0.0-alpha.3"
 detekt-compose = "0.5.8"
 java = "21"
@@ -19,6 +21,7 @@ versionCatalogLinter = "1.1.0"
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "composeMultiplatform" }
@@ -30,6 +33,14 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 mupdf-kmp = { group = "com.sorrowblue.mupdf", name = "mupdf-kmp", version = "1.0.0" }
 
+compose-componentsResources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "composeMultiplatform" }
+compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "compose-material3" }
+compose-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "composeMultiplatform" }
+compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
+compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "composeMultiplatform" }
+compose-uiTooling = { group = "org.jetbrains.compose.ui", name = "ui-tooling", version.ref = "composeMultiplatform" }
+
+
 [bundles]
 detekt = [
     "detekt-compose",
@@ -40,10 +51,11 @@ detekt = [
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
 androidApplication = { id = "com.android.application", version.ref = "android-gradle" }
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
-buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
+androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
+buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 comicviewer-detekt = { id = "com.sorrowblue.comicviewer.plugin.primitive.detekt" }
-comicviewer-gitTagVersion = { id = "com.sorrowblue.comicviewer.plugin.git-tag-version" }
-comicviewer-lint = { id = "com.sorrowblue.comicviewer.plugin.lint" }
+comicviewer-gitTagVersion = { id = "com.sorrowblue.comicviewer.plugin.primitive.git-tag-version" }
+comicviewer-lint = { id = "com.sorrowblue.comicviewer.plugin.primitive.android-lint" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }

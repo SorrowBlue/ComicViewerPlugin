@@ -1,0 +1,80 @@
+plugins {
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.aboutlibraries)
+    alias(libs.plugins.comicviewer.detekt)
+    alias(libs.plugins.comicviewer.gitTagVersion)
+    alias(libs.plugins.comicviewer.lint)
+}
+
+android {
+    namespace = "com.sorrowblue.comicviewer.plugin.pdf.app"
+    defaultConfig {
+        applicationId = "com.sorrowblue.comicviewer.plugin.pdf"
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        versionCode = 4
+        versionName = version.toString()
+    }
+    androidResources {
+        generateLocaleConfig = true
+    }
+    signingConfigs {
+        val androidSigningDebugStoreFile: String? by project
+        if (!androidSigningDebugStoreFile.isNullOrEmpty()) {
+            getByName("debug") {
+                val androidSigningDebugStorePassword: String? by project
+                val androidSigningDebugKeyAlias: String? by project
+                val androidSigningDebugKeyPassword: String? by project
+                storeFile = file(androidSigningDebugStoreFile!!)
+                storePassword = androidSigningDebugStorePassword
+                keyAlias = androidSigningDebugKeyAlias
+                keyPassword = androidSigningDebugKeyPassword
+            }
+        } else {
+            logger.warn("androidSigningDebugStoreFile not found")
+        }
+
+        val androidSigningReleaseStoreFile: String? by project
+        if (!androidSigningReleaseStoreFile.isNullOrEmpty()) {
+            create("release") {
+                val androidSigningReleaseStorePassword: String? by project
+                val androidSigningReleaseKeyAlias: String? by project
+                val androidSigningReleaseKeyPassword: String? by project
+                storeFile = file(androidSigningReleaseStoreFile!!)
+                storePassword = androidSigningReleaseStorePassword
+                keyAlias = androidSigningReleaseKeyAlias
+                keyPassword = androidSigningReleaseKeyPassword
+            }
+        } else {
+            logger.warn("androidSigningReleaseStoreFile not found")
+        }
+    }
+
+    buildTypes {
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            signingConfig = signingConfigs.findByName(name)
+        }
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.findByName(name)
+            ndk.debugSymbolLevel = "FULL"
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+}
+
+kotlin {
+    jvmToolchain {
+        vendor = JvmVendorSpec.ADOPTIUM
+        languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
+    }
+}
+
+dependencies {
+    implementation(projects.pdf)
+}
