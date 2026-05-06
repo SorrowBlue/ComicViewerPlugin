@@ -40,7 +40,7 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-
+          audience: ${{ vars.GOOGLE_AUDIENCE }}
       - name: Upload AAB to Internal App Sharing (Attempt)
         id: upload
         uses: r0adkll/upload-google-play@v1
