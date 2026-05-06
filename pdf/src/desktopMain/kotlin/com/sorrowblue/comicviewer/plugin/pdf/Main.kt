@@ -10,7 +10,7 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "ComicViewerPdf",
-        icon = painterResource(Res.drawable.ic_product)
+        icon = painterResource(Res.drawable.ic_product),
     ) {
         HomeScreen { }
     }

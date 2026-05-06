@@ -1,5 +1,4 @@
-import io.gitlab.arturbosch.detekt.Detekt
-import org.gradle.kotlin.dsl.withType
+import dev.detekt.gradle.Detekt
 
 plugins {
     `kotlin-dsl`
@@ -29,35 +28,31 @@ dependencies {
     compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
     detektPlugins(libs.detekt.compose)
-    detektPlugins(libs.detekt.formatting)
+    detektPlugins(libs.detekt.ktlintWrapper)
 }
 
 detekt {
     buildUponDefaultConfig = true
-    autoCorrect = true
     config.setFrom(layout.projectDirectory.file("../config/detekt/detekt.yml"))
+    basePath.set(projectDir)
+    autoCorrect = true
+    parallel = true
 }
 
 tasks.withType<Detekt>().configureEach {
     reports {
         html.required.set(false)
-        md.required.set(false)
+        markdown.required.set(false)
         sarif.required.set(true)
-        txt.required.set(false)
-        xml.required.set(false)
+        checkstyle.required.set(false)
     }
-}
-
-tasks.register("detektAll") {
-    group = "verification"
-    dependsOn(tasks.withType<Detekt>())
+    exclude {
+        it.file.path.run { contains("generated-sources") }
+    }
 }
 
 gradlePlugin {
     plugins {
-        register(libs.plugins.comicviewer.detekt) {
-            implementationClass = "com.sorrowblue.comicviewer.plugin.DetektConventionPlugin"
-        }
         register(libs.plugins.comicviewer.gitTagVersion) {
             implementationClass = "com.sorrowblue.comicviewer.plugin.GitTagVersionPlugin"
         }

@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         navController = navController,
                         startDestination = "home",
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
                     ) {
                         composable("home") {
                             GreetingScreen(onLicenseClick = {
@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -69,13 +69,13 @@ fun GreetingScreen(onLicenseClick: () -> Unit, modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(Res.drawable.ic_product),
             contentDescription = "アプリアイコン",
-            modifier = Modifier.height(108.dp)
+            modifier = Modifier.height(108.dp),
         )
         Spacer(modifier = Modifier.height(16.dp))
         // アプリ説明
         Text(
             text = "ComicViewerPdfはPDF形式のコミックを快適に閲覧できるAndroidアプリです。",
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(24.dp))
         Greeting(name = "Android")
@@ -88,7 +88,7 @@ fun GreetingScreen(onLicenseClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+private fun GreetingPreview() {
     MaterialTheme {
         GreetingScreen({})
     }

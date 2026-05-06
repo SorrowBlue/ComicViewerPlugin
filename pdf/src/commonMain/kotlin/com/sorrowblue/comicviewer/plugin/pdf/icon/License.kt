@@ -1,3 +1,5 @@
+@file:Suppress("detekt.all")
+
 package com.sorrowblue.comicviewer.plugin.pdf.icon
 
 import androidx.compose.ui.graphics.Color

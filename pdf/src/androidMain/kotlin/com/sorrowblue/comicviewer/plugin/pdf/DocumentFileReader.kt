@@ -34,9 +34,8 @@ internal class DocumentFileReader(
 
     override fun fileSize(pageIndex: Int) = 0L
 
-    override fun loadPage(pageIndex: Int): String? {
-        return loadPageWithFortmat(pageIndex, compressFormat, quality)
-    }
+    override fun loadPage(pageIndex: Int): String? =
+        loadPageWithFortmat(pageIndex, compressFormat, quality)
 
     override fun loadPageWithFortmat(pageIndex: Int, format: Int, quality: Int): String? {
         val compressFormat = when (format) {
@@ -46,7 +45,7 @@ internal class DocumentFileReader(
             4 -> Bitmap.CompressFormat.WEBP_LOSSLESS
             else -> Bitmap.CompressFormat.JPEG
         }
-        val file = dir.resolve("${pageIndex}.webp")
+        val file = dir.resolve("$pageIndex.webp")
         file.outputStream().use {
             AndroidDrawDevice.drawPageFitWidth(document.loadPage(pageIndex), 600)
                 .compress(compressFormat, quality, it)
@@ -55,7 +54,7 @@ internal class DocumentFileReader(
         val fileUri = FileProvider.getUriForFile(
             context,
             authority,
-            file
+            file,
         )
         val callingPackage = context.packageManager.getNameForUid(getCallingUid())
 
@@ -63,7 +62,7 @@ internal class DocumentFileReader(
             context.grantUriPermission(
                 callingPackage,
                 fileUri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                Intent.FLAG_GRANT_READ_URI_PERMISSION,
             )
         } else {
             throw SecurityException("Calling package could not be identified.")

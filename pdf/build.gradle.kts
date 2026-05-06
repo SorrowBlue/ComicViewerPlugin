@@ -160,7 +160,7 @@ compose.desktop {
             packageName = "ComicViewer-PDF-plugin"
             vendor =
                 "SorrowBlue"
-            packageVersion = parseVersionForDesktop(version.toString())
+            packageVersion = "1.1.1"
             outputBaseDir = file("ComicViewerPDF")
             linux {
                 iconFile = File("icon/linux/appIcon.png")
