@@ -19,6 +19,7 @@ kotlinx-coroutines = "1.10.2"
 versionCatalogLinter = "1.1.0"
 
 [libraries]
+aboutlibraries-gradlePlugin = { group = "com.mikepenz.aboutlibraries.plugin", name = "com.mikepenz.aboutlibraries.plugin.gradle.plugin", version.ref = "aboutlibraries" }
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
 androidx-core = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
@@ -44,6 +45,13 @@ detekt = [
     "detekt-compose",
     "detekt-ktlintWrapper"
 ]
+plugins = [
+    "aboutlibraries-gradlePlugin",
+    "android-gradlePlugin",
+    "compose-gradlePlugin",
+    "detekt-gradlePlugin",
+    "kotlin-gradlePlugin",
+]
 
 [plugins]
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
@@ -51,6 +59,7 @@ androidApplication = { id = "com.android.application", version.ref = "android-gr
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
+comicviewer-license = { id = "com.sorrowblue.comicviewer.plugin.primitive.license" }
 comicviewer-detekt = { id = "com.sorrowblue.comicviewer.plugin.primitive.detekt" }
 comicviewer-gitTagVersion = { id = "com.sorrowblue.comicviewer.plugin.primitive.git-tag-version" }
 comicviewer-lint = { id = "com.sorrowblue.comicviewer.plugin.primitive.android-lint" }

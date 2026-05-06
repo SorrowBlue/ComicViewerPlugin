@@ -1,0 +1,46 @@
+name: Update Licenses
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  update-licenses:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: 🤖 ExportLibraryDefinitions for android
+        run: ./gradlew :pdf:androidApp:exportLibraryDefinitions --no-configure-on-demand
+        env:
+          ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🖥️ ExportLibraryDefinitions for jvm
+        run: ./gradlew :pdf:desktopApp:exportLibraryDefinitions --no-configure-on-demand
+        env:
+          ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.PAT }}
+          title: 'Update aboutlibraries.json'
+          body: 'This PR updates the aboutlibraries.json'
+          base: main
+          branch: chore/update-licenses
+          assignees: 'SorrowBlue'
+          reviewers: 'Copilot'
+          labels: ':robot:create-pull-request'
+          commit-message: 'Update aboutlibraries.json'
+
+      - name: Enable Auto Merge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.PAT }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash

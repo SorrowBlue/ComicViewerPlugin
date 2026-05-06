@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.composeHotReload) apply false
     alias(libs.plugins.composeMultiplatform) apply false
 
+    alias(libs.plugins.aboutlibraries) apply false
     alias(libs.plugins.buildconfig) apply false
     alias(libs.plugins.detekt) apply false
 

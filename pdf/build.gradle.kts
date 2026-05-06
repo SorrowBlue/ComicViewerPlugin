@@ -4,9 +4,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.comicviewer.detekt)
     alias(libs.plugins.comicviewer.gitTagVersion)
+    alias(libs.plugins.comicviewer.license)
     alias(libs.plugins.comicviewer.lint)
     alias(libs.plugins.buildconfig)
 }

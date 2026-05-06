@@ -4,8 +4,8 @@ import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryExtension
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.dsl.Lint
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import com.sorrowblue.comicviewer.plugin.libs
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 when {
     pluginManager.hasPlugin(libs.plugins.androidApplication) -> {
@@ -39,12 +39,6 @@ private fun Lint.configure() {
     val isCI = System.getenv("CI").toBoolean()
     checkAllWarnings = true
     checkDependencies = true
-//        disable += listOf(
-//            "InvalidPackage",
-//            "NewerVersionAvailable",
-//            "GradleDependency",
-//            "AppLinksAutoVerify"
-//        )
     baseline = project.rootProject.file("config/lint-baseline.xml")
     lintConfig = project.rootProject.file("config/lint.xml")
     htmlReport = !isCI
