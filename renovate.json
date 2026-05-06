@@ -25,6 +25,20 @@
         "com.google.devtools.ksp{/,}**",
         "gradle"
       ]
+    },
+    {
+      "groupName": "Compose Multiplatform Updates",
+      "groupSlug": "Compose Multiplatform Stack",
+      "matchPackageNames": [
+        "org\\.jetbrains\\.compose[:\\.]*[\\w\\.-]*",
+      ]
+    },
+    {
+      "groupName": "Compose Multiplatform Updates",
+      "groupSlug": "Compose Multiplatform Stack",
+      "matchPackageNames": [
+        "com\\.mikepenz[:\\.]aboutlibraries[\\w\\.-]+",
+      ]
     }
   ]
 }
