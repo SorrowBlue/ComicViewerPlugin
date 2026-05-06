@@ -39,7 +39,6 @@ compose.desktop {
                 TargetFormat.Msi,
                 TargetFormat.Deb
             )
-            packageName = "ComicViewer-PDF-plugin"
             vendor = "SorrowBlue"
             packageVersion = parseVersionForDesktop(version.toString())
             outputBaseDir = file("ComicViewerPDF")
@@ -51,6 +50,7 @@ compose.desktop {
                 menuGroup = "sorrowblue-comicViewer"
             }
             windows {
+                packageName = "ComicViewer-PDF-plugin"
                 iconFile = File("icon/windows/appIcon.ico")
                 installationPath = "ComicViewerPDF"
                 dirChooser = true
