@@ -34,8 +34,8 @@
       ]
     },
     {
-      "groupName": "Compose Multiplatform Updates",
-      "groupSlug": "Compose Multiplatform Stack",
+      "groupName": "Aboutlibraries Updates",
+      "groupSlug": "Aboutlibraries Stack",
       "matchPackageNames": [
         "com\\.mikepenz[:\\.]aboutlibraries[\\w\\.-]+",
       ]
