@@ -47,7 +47,7 @@ jobs:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
           packageName: com.sorrowblue.comicviewer.plugin.pdf
           releaseFiles: pdf/androidApp/build/outputs/bundle/release/androidApp-release.aab
-          track: internalsharing
+          tracks: internalsharing
           mappingFile: pdf/androidApp/build/outputs/mapping/release/mapping.txt
           debugSymbols: pdf/androidApp/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
 
