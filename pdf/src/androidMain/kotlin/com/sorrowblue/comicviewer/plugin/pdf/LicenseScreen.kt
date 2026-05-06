@@ -8,8 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mikepenz.aboutlibraries.ui.compose.android.rememberLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
+import com.mikepenz.aboutlibraries.ui.compose.produceLibraries
 
 @Composable
 fun LicenseScreen(modifier: Modifier = Modifier) {
@@ -19,7 +19,9 @@ fun LicenseScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Top,
     ) {
         // ライセンス一覧
-        val libs by rememberLibraries()
+        val libs by produceLibraries {
+            ""
+        }
         LibrariesContainer(libraries = libs)
     }
 }

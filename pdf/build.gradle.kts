@@ -4,9 +4,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.comicviewer.detekt)
     alias(libs.plugins.comicviewer.gitTagVersion)
+    alias(libs.plugins.comicviewer.license)
     alias(libs.plugins.comicviewer.lint)
     alias(libs.plugins.buildconfig)
 }
@@ -30,7 +30,7 @@ kotlin {
                 implementation(libs.androidx.core)
                 implementation(libs.androidx.activity.compose)
 //                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-                implementation("com.mikepenz:aboutlibraries-compose-m3:12.2.3")
+                implementation("com.mikepenz:aboutlibraries-compose-m3:14.1.0")
                 implementation("androidx.navigation:navigation-compose:2.9.8")
             }
         }

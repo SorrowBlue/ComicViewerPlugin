@@ -12,5 +12,6 @@ internal val Project.libs: LibrariesForLibs
 
 internal fun Project.plugins(block: PluginManager.() -> Unit) = with(pluginManager, block)
 
-internal inline fun <reified T : KotlinBaseExtension> Project.kotlin(crossinline block: T.() -> Unit) =
-    configure<T> { block(this) }
+internal inline fun <reified T : KotlinBaseExtension> Project.kotlin(
+    crossinline block: T.() -> Unit,
+) = configure<T> { block(this) }

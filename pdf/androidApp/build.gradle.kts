@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.comicviewer.detekt)
     alias(libs.plugins.comicviewer.gitTagVersion)
+    alias(libs.plugins.comicviewer.license)
     alias(libs.plugins.comicviewer.lint)
 }
 
@@ -77,4 +77,10 @@ kotlin {
 
 dependencies {
     implementation(projects.pdf)
+}
+
+aboutLibraries {
+    export {
+        outputFile.set(file("src/main/res/raw/aboutlibraries.json"))
+    }
 }

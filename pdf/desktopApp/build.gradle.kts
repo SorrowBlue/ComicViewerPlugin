@@ -1,3 +1,4 @@
+import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -5,9 +6,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.comicviewer.detekt)
     alias(libs.plugins.comicviewer.gitTagVersion)
+    alias(libs.plugins.comicviewer.license)
     alias(libs.plugins.comicviewer.lint)
     alias(libs.plugins.buildconfig)
 }
@@ -30,6 +31,13 @@ kotlin {
         }
     }
 }
+
+aboutLibraries {
+    export {
+        outputFile.set(file("src/jvmMain/composeResources/files/aboutlibraries.json"))
+    }
+}
+
 compose.desktop {
     application {
         mainClass = "com.sorrowblue.comicviewer.plugin.pdf.MainKt"

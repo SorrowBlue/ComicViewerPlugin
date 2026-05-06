@@ -23,12 +23,8 @@ tasks {
 
 dependencies {
     compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
-    compileOnly(libs.android.gradlePlugin)
-    compileOnly(libs.kotlin.gradlePlugin)
-    compileOnly(libs.detekt.gradlePlugin)
-    compileOnly(libs.compose.gradlePlugin)
-    detektPlugins(libs.detekt.compose)
-    detektPlugins(libs.detekt.ktlintWrapper)
+    compileOnly(libs.bundles.plugins)
+    detektPlugins(libs.bundles.detekt)
 }
 
 detekt {

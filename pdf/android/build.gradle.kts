@@ -1,10 +1,8 @@
-import com.android.build.api.variant.BuildConfigField
-
 plugins {
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.comicviewer.detekt)
     alias(libs.plugins.comicviewer.gitTagVersion)
+    alias(libs.plugins.comicviewer.license)
     alias(libs.plugins.comicviewer.lint)
 }
 
