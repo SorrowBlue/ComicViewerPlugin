@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.visible
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,24 +19,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.plugin.pdf.icon.License
 import comicviewerplugin.pdf.generated.resources.Res
 import comicviewerplugin.pdf.generated.resources.ic_product
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
+    isAndroid: Boolean = false,
+    visibleIcon: Boolean = false,
     onLicenseClick: () -> Unit = {},
-    onLaunchAppClick: () -> Unit = {}, // Callback for launching the main app
+    onLaunchAppClick: () -> Unit = {},
+    onVisibleChange: (Boolean) -> Unit = {},
 ) {
     Scaffold(modifier = modifier) { contentPadding ->
         Column(
@@ -60,6 +60,7 @@ internal fun HomeScreen(
             // ホームランチャーアイコン表示切り替えスイッチ
             Row(
                 modifier = Modifier
+                    .visible(isAndroid)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -69,26 +70,22 @@ internal fun HomeScreen(
                     text = "ホームランチャーにアイコンを表示",
                     style = MaterialTheme.typography.bodyLarge,
                 )
-                var iconVisible by remember { mutableStateOf(true) } // 初期状態は表示
                 Switch(
-                    checked = iconVisible,
+                    checked = visibleIcon,
                     onCheckedChange = {
-                        iconVisible = it
-                        // TODO(ホームランチャーのアイコン表示/非表示を切り替えるロジックを実装します。)
-                        // Androidの場合、PackageManagerとComponentNameを使用して設定します。
-                        // KMP Desktopの場合は、OS固有の方法で対応する必要があります。
+                        onVisibleChange(it)
                     },
                 )
             }
             Spacer(modifier = Modifier.height(16.dp)) // Adjusted spacer
 
             // ComicViewerアプリを起動ボタン
-            OutlinedButton(onClick = {
-                // TODO(ComicViewerアプリ本体を起動するロジックを実装します。)
-                // Android: Intentを使用して特定のパッケージ名でアプリを起動
-                // Desktop: OS固有の方法でプロセスを起動 (Runtime.getRuntime().exec(...))
-                onLaunchAppClick()
-            }) {
+            OutlinedButton(
+                modifier = Modifier.visible(isAndroid),
+                onClick = {
+                    onLaunchAppClick()
+                },
+            ) {
                 Text("ComicViewerアプリを起動")
             }
 

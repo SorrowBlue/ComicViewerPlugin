@@ -51,23 +51,4 @@ tasks.withType<Detekt>().configureEach {
     }
 }
 
-gradlePlugin {
-    plugins {
-        register(libs.plugins.comicviewer.gitTagVersion) {
-            implementationClass = "com.sorrowblue.comicviewer.plugin.GitTagVersionPlugin"
-        }
-        register(libs.plugins.comicviewer.lint) {
-            implementationClass = "com.sorrowblue.comicviewer.plugin.AndroidLintConventionPlugin"
-        }
-    }
-}
-
 private val currentLibs get() = libs
-
-private fun NamedDomainObjectContainer<PluginDeclaration>.register(
-    provider: Provider<PluginDependency>,
-    function: PluginDeclaration.() -> Unit,
-) = register(provider.get().pluginId) {
-    id = name
-    function()
-}

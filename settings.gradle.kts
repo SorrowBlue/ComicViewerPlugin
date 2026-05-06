@@ -34,6 +34,15 @@ dependencyResolutionManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+    id("com.android.settings") version "9.2.1"
+}
+
+android {
+    compileSdk = 37
+    minSdk = 30
 }
 
 include(":pdf")
+include(":pdf:android")
+include(":pdf:androidApp")
+include(":pdf:desktopApp")

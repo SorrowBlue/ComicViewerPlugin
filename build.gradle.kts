@@ -1,11 +1,18 @@
 plugins {
-    alias(libs.plugins.versionCatalogLinter)
+    alias(libs.plugins.kotlinMultiplatform) apply false
+
     alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.androidMultiplatformLibrary) apply false
+
+    alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.composeHotReload) apply false
     alias(libs.plugins.composeMultiplatform) apply false
+
+    alias(libs.plugins.buildconfig) apply false
     alias(libs.plugins.detekt) apply false
-    alias(libs.plugins.composeCompiler) apply false
-    alias(libs.plugins.kotlinMultiplatform) apply false
+
+    alias(libs.plugins.versionCatalogLinter)
 }
 
 val reportMerge = tasks.register("reportMerge", dev.detekt.gradle.report.ReportMergeTask::class) {
