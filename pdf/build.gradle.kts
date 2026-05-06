@@ -30,7 +30,7 @@ kotlin {
                 implementation(libs.androidx.core)
                 implementation(libs.androidx.activity.compose)
 //                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-                implementation("com.mikepenz:aboutlibraries-compose-m3:12.2.3")
+                implementation("com.mikepenz:aboutlibraries-compose-m3:14.1.0")
                 implementation("androidx.navigation:navigation-compose:2.9.8")
             }
         }
