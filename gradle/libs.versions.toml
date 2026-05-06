@@ -59,9 +59,9 @@ androidApplication = { id = "com.android.application", version.ref = "android-gr
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
-comicviewer-license = { id = "com.sorrowblue.comicviewer.plugin.primitive.license" }
 comicviewer-detekt = { id = "com.sorrowblue.comicviewer.plugin.primitive.detekt" }
 comicviewer-gitTagVersion = { id = "com.sorrowblue.comicviewer.plugin.primitive.git-tag-version" }
+comicviewer-license = { id = "com.sorrowblue.comicviewer.plugin.primitive.license" }
 comicviewer-lint = { id = "com.sorrowblue.comicviewer.plugin.primitive.android-lint" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
