@@ -41,11 +41,9 @@ compose.desktop {
             )
             vendor = "SorrowBlue"
             packageVersion = parseVersionForDesktop(version.toString())
-            outputBaseDir = file("ComicViewerPDF")
             linux {
                 packageName = "comicviewerpdf"
                 iconFile = File("icon/linux/appIcon.png")
-                installationPath = "comicviewerpdf"
                 debMaintainer = "sorrowblue.dev@gmail.com"
                 menuGroup = "sorrowblue-comicViewer"
             }
