@@ -47,10 +47,10 @@ class MainActivity : ComponentActivity() {
                                 onLaunchAppClick = {
                                     launchApp()
                                 },
-                                onVisibleChange = {
-                                    setLauncherIconVisible(it)
+                                onVisibleChange = { visible ->
+                                    setLauncherIconVisible(visible)
                                     visibleIcon = getLauncherIconVisible()
-                                }
+                                },
                             )
                         }
                         composable("license") {
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
     private fun launchApp() {
         val isLaunched = runCatching {
             var launched = false
-            for (pkg in targetPackages) {
+            for (pkg in TargetPackages) {
                 val intent = packageManager.getLaunchIntentForPackage(pkg)
                 if (intent != null) {
                     startActivity(intent)
@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
             Log.e(TAG, "Error: ${it.localizedMessage.orEmpty()}")
         }.getOrDefault(false)
         if (!isLaunched) {
-            openPlayStore(basePackageName)
+            openPlayStore(BasePackageName)
         }
     }
 
@@ -113,22 +113,24 @@ class MainActivity : ComponentActivity() {
         packageManager.setComponentEnabledSetting(
             componentName,
             newState,
-            PackageManager.DONT_KILL_APP
+            PackageManager.DONT_KILL_APP,
         )
     }
 
     private fun getLauncherIconVisible(): Boolean {
         val componentName =
             ComponentName(this, "com.sorrowblue.comicviewer.plugin.pdf.LauncherAlias")
-        return packageManager.getComponentEnabledSetting(componentName) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        return packageManager.getComponentEnabledSetting(
+            componentName,
+        ) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
     }
 }
 
 private const val TAG = "MainActivity"
 
-private const val basePackageName = "com.sorrowblue.comicviewer"
-private val targetPackages = listOf(
-    "$basePackageName.debug",
-    "$basePackageName.prerelease",
-    basePackageName
+private const val BasePackageName = "com.sorrowblue.comicviewer"
+private val TargetPackages = listOf(
+    "$BasePackageName.debug",
+    "$BasePackageName.prerelease",
+    BasePackageName,
 )

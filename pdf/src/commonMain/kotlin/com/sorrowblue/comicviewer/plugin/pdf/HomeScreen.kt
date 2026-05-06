@@ -84,7 +84,8 @@ internal fun HomeScreen(
                 modifier = Modifier.visible(isAndroid),
                 onClick = {
                     onLaunchAppClick()
-                }) {
+                },
+            ) {
                 Text("ComicViewerアプリを起動")
             }
 
