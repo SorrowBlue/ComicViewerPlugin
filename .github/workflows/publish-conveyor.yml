@@ -5,11 +5,16 @@ on:
 
 permissions:
   contents: read
+  pages: write
   id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
 
-  build-desktop:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,26 +25,6 @@ jobs:
         uses: ./.github/actions/setup-java-gradle
       - name: Run :pdf:desktopApp:jvmJar
         run: ./gradlew :pdf:desktopApp:jvmJar
-#      - name: Upload Desktop Binaries
-#        uses: actions/upload-artifact@v7
-#        with:
-#          name: build-desktop
-#          path: pdf/desktopApp/build/libs
-#  deploy:
-#    needs: [ build-desktop ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v6
-#        with:
-#          fetch-depth: 0
-#      - name: Setup JDK and Gradle
-#        uses: ./.github/actions/setup-java-gradle
-#      - name: Download desktop build
-#        uses: actions/download-artifact@v8
-#        with:
-#          name: build-desktop
-#          path: pdf/desktopApp/build/libs
       - name: Decode WINDOWS_CER
         id: windows_cer
         uses: timheuer/base64-to-file@v2
@@ -54,7 +39,37 @@ jobs:
           CONVEYOR_PASSPHRASE: ${{ secrets.CONVEYOR_PASSPHRASE  }}
           WINDOWS_CER: ${{ steps.windows_cer.outputs.filePath }}
         with:
+          command: -f ci.conveyor.conf make site
           extra_flags: '--passphrase=env:CONVEYOR_PASSPHRASE'
-          command: -f ci.conveyor.conf make copied-site
           signing_key: ${{ secrets.SIGNING_KEY }}
           agree_to_license: 1
+
+      - name: Prepare files for deployment
+        run: |
+          # フォルダの作成
+          mkdir -p _site
+          
+          # 1. output配下の特定ファイルをルートにコピー
+          cp output/download.html _site/
+          cp output/icon.png _site/
+          
+          # 2. docs配下のフォルダ/ファイルを丸ごとコピー
+          # (docsディレクトリ自体を_siteの中に含める場合)
+          cp -r docs _site/
+
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: './_site'
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

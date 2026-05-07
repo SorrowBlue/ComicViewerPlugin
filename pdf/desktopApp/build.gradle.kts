@@ -1,4 +1,3 @@
-import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -12,10 +11,6 @@ plugins {
     alias(libs.plugins.comicviewer.lint)
     alias(libs.plugins.buildconfig)
     id("dev.hydraulic.conveyor") version "2.0"
-}
-
-afterEvaluate {
-    version = parseVersionForDesktop(version.toString())
 }
 
 kotlin {
@@ -37,13 +32,6 @@ kotlin {
     }
 }
 
-dependencies {
-    linuxAmd64("org.jetbrains.compose.desktop:desktop-jvm-linux-x64:1.10.3")
-    macAmd64("org.jetbrains.compose.desktop:desktop-jvm-macos-x64:1.10.3")
-    macAarch64("org.jetbrains.compose.desktop:desktop-jvm-macos-arm64:1.10.3")
-    windowsAmd64("org.jetbrains.compose.desktop:desktop-jvm-windows-x64:1.10.3")
-}
-
 aboutLibraries {
     export {
         outputFile.set(file("src/jvmMain/composeResources/files/aboutlibraries.json"))
@@ -55,21 +43,17 @@ compose.desktop {
         mainClass = "com.sorrowblue.comicviewer.plugin.pdf.MainKt"
 
         nativeDistributions {
-            targetFormats(
-                TargetFormat.Msi,
-                TargetFormat.Deb
-            )
+            targetFormats(TargetFormat.Exe)
             vendor = "SorrowBlue"
             packageName = "comicviewer-pdf-plugin"
-            packageVersion = parseVersionForDesktop(version.toString())
             linux {
                 iconFile = File("icon/linux/appIcon.png")
                 debMaintainer = "sorrowblue.dev@gmail.com"
-                menuGroup = "sorrowblue-comicViewer"
+                menuGroup = "comicviewer"
             }
             windows {
                 iconFile = File("icon/windows/appIcon.ico")
-                installationPath = "ComicViewerPDF"
+                installationPath = "ComicViewerPdfPlugin"
                 dirChooser = true
                 menuGroup = "ComicViewer"
                 upgradeUuid = "F5DB26A2-175B-446C-9EDA-50ACACCB6F8E"
@@ -77,15 +61,5 @@ compose.desktop {
             }
         }
         jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
-    }
-}
-
-private fun parseVersionForDesktop(version: String): String {
-    val regex = Regex("""^(\d+)\.(\d+)\.(\d+)""")
-    val match = regex.find(version) ?: return version
-    val (major, minor, patch) = match.destructured
-    val newPatch = patch.toInt() + 1
-    return "${major}.${minor}.${newPatch}".also {
-        logger.lifecycle("Desktop version: $version -> $it")
     }
 }
