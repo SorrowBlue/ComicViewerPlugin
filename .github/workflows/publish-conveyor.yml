@@ -1,0 +1,60 @@
+name: Publish conveyor
+on:
+  workflow_dispatch:
+  push:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+
+  build-desktop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Run :pdf:desktopApp:jvmJar
+        run: ./gradlew :pdf:desktopApp:jvmJar
+#      - name: Upload Desktop Binaries
+#        uses: actions/upload-artifact@v7
+#        with:
+#          name: build-desktop
+#          path: pdf/desktopApp/build/libs
+#  deploy:
+#    needs: [ build-desktop ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v6
+#        with:
+#          fetch-depth: 0
+#      - name: Setup JDK and Gradle
+#        uses: ./.github/actions/setup-java-gradle
+#      - name: Download desktop build
+#        uses: actions/download-artifact@v8
+#        with:
+#          name: build-desktop
+#          path: pdf/desktopApp/build/libs
+      - name: Decode WINDOWS_CER
+        id: windows_cer
+        uses: timheuer/base64-to-file@v2
+        with:
+          fileName: 'windows.cer'
+          encodedString: ${{ secrets.WINDOWS_CER }}
+      - name: Run Conveyor
+        uses: hydraulic-software/conveyor/actions/build@v22.0
+        env:
+          OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          CONVEYOR_PASSPHRASE: ${{ secrets.CONVEYOR_PASSPHRASE  }}
+          WINDOWS_CER: ${{ steps.windows_cer.outputs.filePath }}
+        with:
+          extra_flags: '--passphrase=env:CONVEYOR_PASSPHRASE'
+          command: -f ci.conveyor.conf make copied-site
+          signing_key: ${{ secrets.SIGNING_KEY }}
+          agree_to_license: 1
