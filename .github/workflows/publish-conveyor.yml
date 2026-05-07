@@ -40,10 +40,18 @@ jobs:
         with:
           name: build-desktop
           path: ./artifacts/windows
+      - name: Decode WINDOWS_CER
+        id: windows_cer
+        uses: timheuer/base64-to-file@v2
+        with:
+          fileName: 'windows.cer'
+          encodedString: ${{ secrets.WINDOWS_CER }}
       - name: Run Conveyor
         uses: hydraulic-software/conveyor/actions/build@v22.0
         env:
           OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          WINDOWS_CER: ${{ steps.windows_cer.outputs.filePath }}
         with:
           command: make copied-site
           signing_key: ${{ secrets.SIGNING_KEY }}
