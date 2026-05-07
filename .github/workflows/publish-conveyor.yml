@@ -20,26 +20,26 @@ jobs:
         uses: ./.github/actions/setup-java-gradle
       - name: Run :pdf:desktopApp:jvmJar
         run: ./gradlew :pdf:desktopApp:jvmJar
-      - name: Upload Desktop Binaries
-        uses: actions/upload-artifact@v7
-        with:
-          name: build-desktop
-          path: pdf/desktopApp/build/libs
-  deploy:
-    needs: [ build-desktop ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Download desktop build
-        uses: actions/download-artifact@v8
-        with:
-          name: build-desktop
-          path: pdf/desktopApp/build/libs
+#      - name: Upload Desktop Binaries
+#        uses: actions/upload-artifact@v7
+#        with:
+#          name: build-desktop
+#          path: pdf/desktopApp/build/libs
+#  deploy:
+#    needs: [ build-desktop ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v6
+#        with:
+#          fetch-depth: 0
+#      - name: Setup JDK and Gradle
+#        uses: ./.github/actions/setup-java-gradle
+#      - name: Download desktop build
+#        uses: actions/download-artifact@v8
+#        with:
+#          name: build-desktop
+#          path: pdf/desktopApp/build/libs
       - name: Decode WINDOWS_CER
         id: windows_cer
         uses: timheuer/base64-to-file@v2
