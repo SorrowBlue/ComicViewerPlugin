@@ -46,17 +46,17 @@ jobs:
 
       - name: Prepare files for deployment
         run: |
-          # フォルダの作成
-          mkdir -p _site
-          
-          # 1. output配下の特定ファイルをルートにコピー
-          cp output/download.html _site/
-          cp output/icon.png _site/
-          
-          # 2. docs配下のフォルダ/ファイルを丸ごとコピー
-          # (docsディレクトリ自体を_siteの中に含める場合)
-          cp -r docs _site/
-
+          mkdir -p site
+          cp output/download.html site/
+          cp output/icon.png site/
+          cp -r docs site/
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./site
+          destination: ./_site
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v5
