@@ -41,7 +41,7 @@ jobs:
           name: build-desktop
           path: ./artifacts/windows
       - name: Run Conveyor
-        uses: hydraulic-software/conveyor/actions/build@v9.2
+        uses: hydraulic-software/conveyor/actions/build@v22.0
         env:
           OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
         with:
