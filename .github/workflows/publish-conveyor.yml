@@ -33,13 +33,13 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
       - name: Download desktop build
         uses: actions/download-artifact@v8
         with:
           name: build-desktop
           path: ./artifacts/windows
-
       - name: Run Conveyor
         uses: hydraulic-software/conveyor/actions/build@v9.2
         env:
