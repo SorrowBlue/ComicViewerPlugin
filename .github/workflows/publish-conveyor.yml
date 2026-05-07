@@ -35,7 +35,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download desktop build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v8
         with:
           name: build-desktop
           path: ./artifacts/windows
