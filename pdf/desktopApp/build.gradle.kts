@@ -11,6 +11,11 @@ plugins {
     alias(libs.plugins.comicviewer.license)
     alias(libs.plugins.comicviewer.lint)
     alias(libs.plugins.buildconfig)
+    id("dev.hydraulic.conveyor") version "2.0"
+}
+
+afterEvaluate {
+    version = parseVersionForDesktop(version.toString())
 }
 
 kotlin {
@@ -32,6 +37,13 @@ kotlin {
     }
 }
 
+dependencies {
+    linuxAmd64("org.jetbrains.compose.desktop:desktop-jvm-linux-x64:1.10.3")
+    macAmd64("org.jetbrains.compose.desktop:desktop-jvm-macos-x64:1.10.3")
+    macAarch64("org.jetbrains.compose.desktop:desktop-jvm-macos-arm64:1.10.3")
+    windowsAmd64("org.jetbrains.compose.desktop:desktop-jvm-windows-x64:1.10.3")
+}
+
 aboutLibraries {
     export {
         outputFile.set(file("src/jvmMain/composeResources/files/aboutlibraries.json"))
@@ -48,15 +60,14 @@ compose.desktop {
                 TargetFormat.Deb
             )
             vendor = "SorrowBlue"
+            packageName = "comicviewer-pdf-plugin"
             packageVersion = parseVersionForDesktop(version.toString())
             linux {
-                packageName = "comicviewerpdf"
                 iconFile = File("icon/linux/appIcon.png")
                 debMaintainer = "sorrowblue.dev@gmail.com"
                 menuGroup = "sorrowblue-comicViewer"
             }
             windows {
-                packageName = "ComicViewer-PDF-plugin"
                 iconFile = File("icon/windows/appIcon.ico")
                 installationPath = "ComicViewerPDF"
                 dirChooser = true
