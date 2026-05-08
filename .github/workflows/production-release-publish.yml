@@ -3,7 +3,7 @@ name: Production Release Publish
 on:
   push:
     tags:
-      - 'v.*.*.*'
+      - 'v*.*.*'
 
 permissions:
   contents: write
@@ -80,7 +80,6 @@ jobs:
           tag: ${{ github.ref_name }}
           fileName: 'gh-pages-source.tar'
           extract: true
-          extract-path: 'gh-pages-source'
       - name: Setup Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Build with Jekyll
