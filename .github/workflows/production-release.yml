@@ -96,7 +96,7 @@ jobs:
           path: output/.
 
   draft-release:
-    needs: [ input-check, conveyor-build, package-pages ]
+    needs: [ input-check, conveyor-build ]
     runs-on: ubuntu-latest
     steps:
       - name: Update draft release metadata
