@@ -1,4 +1,15 @@
 name: Authenticate to Google Cloud
+inputs:
+  workload_identity_provider:
+    description: Workload Identity Provider resource name
+    required: true
+  service_account:
+    description: Service account email for federated auth
+    required: true
+outputs:
+  credentials_file_path:
+    description: Path to generated Google credentials file
+    value: ${{ steps.auth.outputs.credentials_file_path }}
 runs:
   using: "composite"
   steps:
@@ -6,5 +17,5 @@ runs:
       id: auth
       uses: google-github-actions/auth@v3
       with:
-        workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-        service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+        workload_identity_provider: ${{ inputs.workload_identity_provider }}
+        service_account: ${{ inputs.service_account }}

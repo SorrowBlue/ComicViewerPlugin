@@ -61,6 +61,9 @@ jobs:
       - name: Authenticate to Google Cloud
         id: auth
         uses: ./.github/actions/auth-google-cloud
+        with:
+          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       - name: Upload AAB to Play Console (Draft only)
         uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
         with:
