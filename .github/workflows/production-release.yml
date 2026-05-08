@@ -89,7 +89,7 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           name: desktop-jar
-          path: .
+          path: pdf/
       - name: Verify jar locations
         run: |
           set -euo pipefail
