@@ -113,7 +113,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: gh-pages-source
-          path: gh-pages-site.tar.gz
+          path: conveyor-pages-files
 
   draft-release:
     needs: [ input-check, conveyor-build, package-pages ]
