@@ -76,47 +76,24 @@ jobs:
           extra_flags: '--passphrase=env:CONVEYOR_PASSPHRASE'
           signing_key: ${{ secrets.SIGNING_KEY }}
           agree_to_license: 1
-      - name: Upload pages files artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: conveyor-pages-files
-          path: |
-            output/download.html
-            output/icon.png
-      - name: Upload Desktop artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: conveyor-output
-          path: |
-            output/**
-            !output/download.html
-            !output/icon.png
-
-  package-pages:
-    needs: conveyor-build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Download pages files artifact
-        uses: actions/download-artifact@v6
-        with:
-          name: conveyor-pages-files
-          path: conveyor-pages-files
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Prepare gh-pages source bundle
         run: |
           set -euo pipefail
-          cp -r docs/. conveyor-pages-files/
-          if [ -f conveyor-pages-files/download.html ]; then cp conveyor-pages-files/download.html site/; fi
-          if [ -f conveyor-pages-files/icon.png ]; then cp conveyor-pages-files/icon.png site/; fi
-          tar -cvf gh-pages.tar conveyor-pages-files
-      - name: Upload gh-pages source artifact
+          mkdir _site
+          cp -r docs/. _site/
+          mv output/download.html _site/
+          mv output/icon.png _site/
+          tar -cvf _site.tar _site/
+      - name: Upload conveyor artifact
         uses: actions/upload-artifact@v7
         with:
-          name: gh-pages-source
-          path: gh-pages.tar
+          name: gh-pages
+          path: _site.tar
+      - name: Upload conveyor artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: conveyor-output
+          path: output/.
 
   draft-release:
     needs: [ input-check, conveyor-build, package-pages ]
@@ -138,7 +115,7 @@ jobs:
       - name: Download gh-pages source artifact
         uses: actions/download-artifact@v6
         with:
-          name: gh-pages-source
+          name: gh-pages
           path: release-assets
       - name: Upload release assets
         uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
