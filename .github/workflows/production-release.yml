@@ -93,7 +93,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: conveyor-output
-          path: output/.
+          path: output/*
 
   draft-release:
     needs: [ input-check, conveyor-build ]
