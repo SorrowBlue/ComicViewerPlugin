@@ -48,7 +48,7 @@ jobs:
   #    needs: input-check
   #    uses: ./.github/workflows/lint.yml
 
-  build-desktop:
+  conveyor-build:
     #    needs: [static-code-analysis, android-lint]
     needs: input-check
     runs-on: ubuntu-latest
@@ -63,42 +63,8 @@ jobs:
           git tag "${{ needs.input-check.outputs.validated_tag }}" "$GITHUB_SHA"
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
-      - name: Build Desktop jar
+      - name: Build jar
         run: ./gradlew :pdf:desktopApp:jvmJar
-      - name: Upload Desktop jar
-        uses: actions/upload-artifact@v7
-        with:
-          name: desktop-jar
-          path: |
-            pdf/build/libs
-            pdf/desktopApp/build/libs
-
-  conveyor:
-    needs: [ build-desktop, input-check ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Create local tag
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag "${{ needs.input-check.outputs.validated_tag }}" "$GITHUB_SHA" || true
-      - name: Download Desktop jar artifact
-        uses: actions/download-artifact@v6
-        with:
-          name: desktop-jar
-          path: pdf/
-      - name: Verify jar locations
-        run: |
-          set -euo pipefail
-          ls -la pdf/build/libs || true
-          ls -la pdf/desktopApp/build/libs || true
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Print Conveyor Config
-        run: ./gradlew -q pdf:desktopApp:printConveyorConfig
       - name: Run Conveyor
         uses: hydraulic-software/conveyor/actions/build@v22.0
         env:
@@ -127,7 +93,7 @@ jobs:
             !output/icon.png
 
   package-pages:
-    needs: conveyor
+    needs: conveyor-build
     runs-on: ubuntu-latest
     steps:
       - name: Download pages files artifact
@@ -140,11 +106,9 @@ jobs:
       - name: Prepare gh-pages source bundle
         run: |
           set -euo pipefail
-          mkdir -p site
-          cp -r docs/. site/
+          cp -r docs/. conveyor-pages-files/
           if [ -f conveyor-pages-files/download.html ]; then cp conveyor-pages-files/download.html site/; fi
           if [ -f conveyor-pages-files/icon.png ]; then cp conveyor-pages-files/icon.png site/; fi
-          tar -czf gh-pages-site.tar.gz -C site .
       - name: Upload gh-pages source artifact
         uses: actions/upload-artifact@v7
         with:
@@ -152,7 +116,7 @@ jobs:
           path: gh-pages-site.tar.gz
 
   draft-release:
-    needs: [ input-check, conveyor, package-pages ]
+    needs: [ input-check, conveyor-build, package-pages ]
     runs-on: ubuntu-latest
     steps:
       - name: Update draft release metadata
