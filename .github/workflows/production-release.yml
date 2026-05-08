@@ -38,19 +38,18 @@ jobs:
             exit 1
           fi
 
-  #  static-code-analysis:
-  #    name: Static code analysis
-  #    needs: input-check
-  #    uses: ./.github/workflows/static-code-analysis.yml
-  #
-  #  android-lint:
-  #    name: Android lint
-  #    needs: input-check
-  #    uses: ./.github/workflows/lint.yml
+  static-code-analysis:
+    name: Static code analysis
+    needs: input-check
+    uses: ./.github/workflows/static-code-analysis.yml
+
+  android-lint:
+    name: Android lint
+    needs: input-check
+    uses: ./.github/workflows/lint.yml
 
   conveyor-build:
-    #    needs: [static-code-analysis, android-lint]
-    needs: input-check
+    needs: [ input-check, static-code-analysis, android-lint ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -79,16 +78,16 @@ jobs:
       - name: Prepare gh-pages source bundle
         run: |
           set -euo pipefail
-          mkdir _site
-          cp -r docs/. _site/
-          mv output/download.html _site/
-          mv output/icon.png _site/
-          tar -cvf _site.tar _site/
+          mkdir gh-pages-source
+          cp -r docs/. gh-pages-source/
+          mv output/download.html gh-pages-source/
+          mv output/icon.png gh-pages-source/
+          tar -cvf gh-pages-source.tar gh-pages-source/
       - name: Upload conveyor artifact
         uses: actions/upload-artifact@v7
         with:
-          name: gh-pages
-          path: _site.tar
+          name: gh-pages-source
+          path: gh-pages-source.tar
       - name: Upload conveyor artifact
         uses: actions/upload-artifact@v7
         with:
@@ -104,9 +103,6 @@ jobs:
         with:
           config-name: release-drafter.yml
           tag: ${{ needs.input-check.outputs.validated_tag }}
-          name: ${{ needs.input-check.outputs.validated_tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Download Desktop artifacts
         uses: actions/download-artifact@v6
         with:
@@ -115,7 +111,7 @@ jobs:
       - name: Download gh-pages source artifact
         uses: actions/download-artifact@v6
         with:
-          name: gh-pages
+          name: gh-pages-source
           path: release-assets
       - name: Upload release assets
         uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
@@ -124,27 +120,14 @@ jobs:
           draft: true
           files: release-assets/*
           overwrite_files: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#  push-tag:
-#    needs: [ input-check, draft-release ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-#      - name: Create and push tag
-#        env:
-#          TAG: ${{ needs.input-check.outputs.validated_tag }}
-#          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
-#        run: |
-#          set -euo pipefail
-#          if [ -z "${RELEASE_PAT:-}" ]; then
-#            echo "::error title=Missing secret::RELEASE_PAT is required to trigger tag-push workflow."
-#            exit 1
-#          fi
-#          git config user.name "github-actions[bot]"
-#          git config user.email "github-actions[bot]@users.noreply.github.com"
-#          git tag "$TAG" "$GITHUB_SHA"
-#          git push "https://x-access-token:${RELEASE_PAT}@github.com/${GITHUB_REPOSITORY}.git" "$TAG"
-#
+  create-release:
+    needs: [ input-check, draft-release ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create draft release and tag
+        uses: release-drafter/release-drafter@563bf132657a13ded0b01fcb723c5a58cdd824e2 # 7.2.1
+        with:
+          config-name: release-drafter.yml
+          publish: true
+          tag: ${{ needs.input-check.outputs.validated_tag }}

@@ -1,0 +1,103 @@
+name: Production Release Publish
+
+on:
+  push:
+    tags:
+      - 'v.*.*.*'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: production-release-publish-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    environment: android-release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Decode android keystore file
+        id: android_keystore
+        uses: timheuer/base64-to-file@v2
+        with:
+          fileName: android_keystore.jks
+          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
+      - name: Build Android App Bundle
+        run: ./gradlew :pdf:androidApp:bundleRelease
+        env:
+          ORG_GRADLE_PROJECT_androidSigningReleaseStoreFile: ${{ steps.android_keystore.outputs.filePath }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      - name: Upload Android artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-aab
+          path: pdf/androidApp/build/outputs/bundle/release/androidApp-release.aab
+
+  upload-play-console:
+    needs: build-android
+    runs-on: ubuntu-latest
+    environment: android-release
+    steps:
+      - name: Download Android artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: android-aab
+          path: release-assets
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: ./.github/actions/setup-java-gradle
+      - name: Upload AAB to Play Console (Draft only)
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
+        with:
+          releaseFiles: release-assets/androidApp-release.aab
+          packageName: com.sorrowblue.comicviewer.plugin.pdf
+          tracks: production
+          releaseName: ${{ github.ref_name }}
+          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
+          status: draft
+          mappingFile: pdf/androidApp/build/outputs/mapping/release/mapping.txt
+          debugSymbols: >-
+            pdf/androidApp/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+
+
+  build-gh-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download _site.tar from this tag release
+        uses: robinraju/release-downloader@28fc21f50d76778e7023361aa1f863e717d3d56f # v1.13
+        with:
+          tag: ${{ github.ref_name }}
+          fileName: 'gh-pages-source.tar'
+          extract: true
+          extract-path: 'gh-pages-source'
+      - name: Setup Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.13
+        with:
+          source: ./gh-pages-source
+          destination: ./_site
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+
+  deplay-gh-pages:
+    needs: build-gh-pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0

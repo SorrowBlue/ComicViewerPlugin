@@ -1,0 +1,10 @@
+name: Authenticate to Google Cloud
+runs:
+  using: "composite"
+  steps:
+    - name: Authenticate to Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v3
+      with:
+        workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+        service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
