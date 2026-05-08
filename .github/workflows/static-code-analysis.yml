@@ -2,6 +2,10 @@ name: Static Code Analysis
 on:
   workflow_call:
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
 
   detekt:

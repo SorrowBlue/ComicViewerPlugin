@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write
   pull-requests: read
+  security-events: write
 
 concurrency:
   group: production-release-${{ github.event.inputs.tag_name }}
