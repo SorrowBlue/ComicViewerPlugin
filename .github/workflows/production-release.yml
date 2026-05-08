@@ -111,11 +111,12 @@ jobs:
           cp -r docs/. conveyor-pages-files/
           if [ -f conveyor-pages-files/download.html ]; then cp conveyor-pages-files/download.html site/; fi
           if [ -f conveyor-pages-files/icon.png ]; then cp conveyor-pages-files/icon.png site/; fi
+          tar -cvf gh-pages.tar conveyor-pages-files
       - name: Upload gh-pages source artifact
         uses: actions/upload-artifact@v7
         with:
           name: gh-pages-source
-          path: conveyor-pages-files
+          path: gh-pages.tar
 
   draft-release:
     needs: [ input-check, conveyor-build, package-pages ]
