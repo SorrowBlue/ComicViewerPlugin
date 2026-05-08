@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer.plugin.pdf"
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 4
+        versionCode = 5
         versionName = version.toString()
     }
     androidResources {
