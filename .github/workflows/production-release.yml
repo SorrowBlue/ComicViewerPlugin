@@ -69,7 +69,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: desktop-jar
-          path: pdf/desktopApp/build/libs
+          path: |
+            pdf/build/libs
+            pdf/desktopApp/build/libs
 
   conveyor:
     needs: [ build-desktop, input-check ]
@@ -87,7 +89,12 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           name: desktop-jar
-          path: pdf/desktopApp/build/libs
+          path: .
+      - name: Verify jar locations
+        run: |
+          set -euo pipefail
+          ls -la pdf/build/libs || true
+          ls -la pdf/desktopApp/build/libs || true
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Print Conveyor Config
