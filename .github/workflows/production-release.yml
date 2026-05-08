@@ -132,3 +132,4 @@ jobs:
           config-name: release-drafter.yml
           publish: true
           tag: ${{ needs.input-check.outputs.validated_tag }}
+          token: ${{ secrets.RELEASE_DRAFTER_PUBLISH }}
