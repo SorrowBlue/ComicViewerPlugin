@@ -90,6 +90,8 @@ jobs:
           path: pdf/desktopApp/build/libs
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
+      - name: Print Conveyor Config
+        run: ./gradlew -q pdf:desktopApp:printConveyorConfig
       - name: Run Conveyor
         uses: hydraulic-software/conveyor/actions/build@v22.0
         env:
