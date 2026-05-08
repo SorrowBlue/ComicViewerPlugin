@@ -56,7 +56,7 @@ jobs:
           path: release-assets
       - name: Authenticate to Google Cloud
         id: auth
-        uses: ./.github/actions/setup-java-gradle
+        uses: ./.github/actions/auth-google-cloud
       - name: Upload AAB to Play Console (Draft only)
         uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
         with:
