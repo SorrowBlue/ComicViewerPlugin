@@ -1,0 +1,184 @@
+name: Production Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release Tag (format: v.X.Y.Z)'
+        required: true
+        default: 'v.1.0.0'
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: production-release-${{ github.event.inputs.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  input-check:
+    runs-on: ubuntu-latest
+    outputs:
+      validated_tag: ${{ github.event.inputs.tag_name }}
+    steps:
+      - name: Check Tag Format and Range
+        id: check
+        run: |
+          TAG="${{ github.event.inputs.tag_name }}"
+          # X: 0-255
+          X_RE="([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
+          # Y, Z: 0-65535
+          YZ_RE="([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])"
+          FULL_RE="^v\.${X_RE}\.${YZ_RE}\.${YZ_RE}$"
+          if [[ $TAG =~ $FULL_RE ]]; then
+            echo "Validation Passed: $TAG"
+          else
+            echo "::error title=Invalid Tag::Tag '$TAG' does not match format v.X.Y.Z (X:0-255, Y/Z:0-65535)"
+            exit 1
+          fi
+
+#  static-code-analysis:
+#    name: Static code analysis
+#    needs: input-check
+#    uses: ./.github/workflows/static-code-analysis.yml
+#
+#  android-lint:
+#    name: Android lint
+#    needs: input-check
+#    uses: ./.github/workflows/lint.yml
+
+  build-desktop:
+#    needs: [static-code-analysis, android-lint]
+    needs: input-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Build Desktop jar
+        run: ./gradlew :pdf:desktopApp:jvmJar
+      - name: Upload Desktop jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: desktop-jar
+          path: pdf/desktopApp/build/libs
+
+  conveyor:
+    needs: build-desktop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Run Conveyor
+        uses: hydraulic-software/conveyor/actions/build@v22.0
+        env:
+          OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          CONVEYOR_PASSPHRASE: ${{ secrets.CONVEYOR_PASSPHRASE  }}
+        with:
+          command: -f ci.conveyor.conf make site
+          extra_flags: '--passphrase=env:CONVEYOR_PASSPHRASE'
+          signing_key: ${{ secrets.SIGNING_KEY }}
+          agree_to_license: 1
+      - name: Upload pages files artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: conveyor-pages-files
+          path: |
+            output/download.html
+            output/icon.png
+      - name: Upload Desktop artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: conveyor-output
+          path: |
+            output/**
+            !output/download.html
+            !output/icon.png
+
+  package-pages:
+    needs: conveyor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download pages files artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: conveyor-pages-files
+          path: conveyor-pages-files
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Prepare gh-pages source bundle
+        run: |
+          set -euo pipefail
+          mkdir -p site
+          cp -r docs/. site/
+          if [ -f conveyor-pages-files/download.html ]; then cp conveyor-pages-files/download.html site/; fi
+          if [ -f conveyor-pages-files/icon.png ]; then cp conveyor-pages-files/icon.png site/; fi
+          tar -czf gh-pages-site.tar.gz -C site .
+      - name: Upload gh-pages source artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: gh-pages-source
+          path: gh-pages-site.tar.gz
+
+  draft-release:
+    needs: [ input-check, conveyor, package-pages ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update draft release metadata
+        uses: release-drafter/release-drafter@563bf132657a13ded0b01fcb723c5a58cdd824e2 # 7.2.1
+        with:
+          config-name: release-drafter.yml
+          tag: ${{ needs.input-check.outputs.validated_tag }}
+          name: ${{ needs.input-check.outputs.validated_tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download Desktop artifacts
+        uses: actions/download-artifact@v6
+        with:
+          name: conveyor-output
+          path: release-assets
+      - name: Download gh-pages source artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: gh-pages-source
+          path: release-assets
+      - name: Upload release assets
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
+        with:
+          tag_name: ${{ needs.input-check.outputs.validated_tag }}
+          draft: true
+          files: release-assets/*
+          overwrite_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#  push-tag:
+#    needs: [ input-check, draft-release ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+#      - name: Create and push tag
+#        env:
+#          TAG: ${{ needs.input-check.outputs.validated_tag }}
+#          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+#        run: |
+#          set -euo pipefail
+#          if [ -z "${RELEASE_PAT:-}" ]; then
+#            echo "::error title=Missing secret::RELEASE_PAT is required to trigger tag-push workflow."
+#            exit 1
+#          fi
+#          git config user.name "github-actions[bot]"
+#          git config user.email "github-actions[bot]@users.noreply.github.com"
+#          git tag "$TAG" "$GITHUB_SHA"
+#          git push "https://x-access-token:${RELEASE_PAT}@github.com/${GITHUB_REPOSITORY}.git" "$TAG"
+#
