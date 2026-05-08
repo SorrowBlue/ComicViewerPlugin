@@ -38,18 +38,18 @@ jobs:
             exit 1
           fi
 
-#  static-code-analysis:
-#    name: Static code analysis
-#    needs: input-check
-#    uses: ./.github/workflows/static-code-analysis.yml
-#
-#  android-lint:
-#    name: Android lint
-#    needs: input-check
-#    uses: ./.github/workflows/lint.yml
+  #  static-code-analysis:
+  #    name: Static code analysis
+  #    needs: input-check
+  #    uses: ./.github/workflows/static-code-analysis.yml
+  #
+  #  android-lint:
+  #    name: Android lint
+  #    needs: input-check
+  #    uses: ./.github/workflows/lint.yml
 
   build-desktop:
-#    needs: [static-code-analysis, android-lint]
+    #    needs: [static-code-analysis, android-lint]
     needs: input-check
     runs-on: ubuntu-latest
     steps:
@@ -72,7 +72,7 @@ jobs:
           path: pdf/desktopApp/build/libs
 
   conveyor:
-    needs: build-desktop
+    needs: [ build-desktop, input-check ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
