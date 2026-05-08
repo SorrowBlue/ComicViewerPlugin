@@ -32,3 +32,30 @@ template: |
   ## What’s Changed
 
   $CHANGES
+
+
+autolabeler:
+  - label: 'type: :sparkles:feature'
+    branch:
+      - '/^feature[/].+/'
+  - label: 'type: :rocket:enhancement'
+    branch:
+      - '/^enhancement[/].+/'
+  - label: 'type: :recycle:refactor'
+    branch:
+      - '/^refactor[/-].+/'
+  - label: 'type: :bug:bug'
+    branch:
+      - '/^fix[/].+/'
+  - label: 'type: :memo:documentation'
+    branch:
+      - '/^doc[/-].+/'
+    files:
+      - '*.md'
+  - label: 'type: :dependabot:dependencies'
+    branch:
+      - '/dependencies[/-].+/'
+      - '/renovate[/-].+/'
+  - label: 'type: :gear:chore'
+    branch:
+      - '/^chore[/-].+/'
