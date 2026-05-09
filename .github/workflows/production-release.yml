@@ -66,7 +66,7 @@ jobs:
       - name: Build jar
         run: ./gradlew :pdf:desktopApp:jvmJar
       - name: Run Conveyor
-        uses: hydraulic-software/conveyor/actions/build@v22.0
+        uses: hydraulic-software/conveyor/actions/build@9e90ce7c2a4356c99d68c63f41e4bc497da279c8 # v22.0
         env:
           OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
@@ -85,12 +85,12 @@ jobs:
           mv output/icon.png gh-pages-source/
           tar -cvf gh-pages-source.tar gh-pages-source/
       - name: Upload conveyor artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: gh-pages-source
           path: gh-pages-source.tar
       - name: Upload conveyor artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: conveyor-output
           path: output/*
@@ -105,12 +105,12 @@ jobs:
           config-name: release-drafter.yml
           tag: ${{ needs.input-check.outputs.validated_tag }}
       - name: Download Desktop artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
         with:
           name: conveyor-output
           path: release-assets
       - name: Download gh-pages source artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
         with:
           name: gh-pages-source
           path: release-assets
