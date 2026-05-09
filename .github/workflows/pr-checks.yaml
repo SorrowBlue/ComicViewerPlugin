@@ -65,6 +65,6 @@ jobs:
     if: needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: wechuli/allcheckspassed@v2
+      - uses: wechuli/allcheckspassed@1d00cf0c34c4b0805db8866d8913f22e7125301e # v2
         with:
           poll: false
