@@ -29,7 +29,9 @@ internal class AndroidExtraNavigator(private val context: Context) : ExtraNaviga
         val isLaunched = runCatching {
             var launched = false
             for (pkg in TargetPackages) {
-                val intent = context.packageManager.getLaunchIntentForPackage(pkg)
+                val intent = context.packageManager.getLaunchIntentForPackage(pkg)?.apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
                 if (intent != null) {
                     context.startActivity(intent)
                     launched = true
