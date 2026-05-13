@@ -45,14 +45,13 @@ interface Navigator {
 }
 
 @Composable
-fun rememberNavigator(config: SavedStateConfiguration, root: NavKey): NavigatorImpl {
+fun rememberNavigator(config: SavedStateConfiguration, root: NavKey): Navigator {
     val backStack = rememberNavBackStack(config, root)
     return remember { NavigatorImpl(backStack) }
 }
 
-class NavigatorImpl(override val backStack: NavBackStack<NavKey>) : Navigator {
+private class NavigatorImpl(override val backStack: NavBackStack<NavKey>) : Navigator {
     override fun onBack() {
-        backStack.removeLastOrNull()
         if (backStack.size > 1) {
             backStack.removeLastOrNull()
         }
