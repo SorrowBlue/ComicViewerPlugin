@@ -40,7 +40,6 @@ private fun Lint.configure() {
     checkAllWarnings = true
     checkDependencies = true
     baseline = project.rootProject.file("config/lint-baseline.xml")
-    lintConfig = project.rootProject.file("config/lint.xml")
     htmlReport = !isCI
     htmlOutput =
         if (htmlReport) {

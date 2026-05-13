@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.kotlinSerialization) apply false
 
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
@@ -12,6 +13,7 @@ plugins {
     alias(libs.plugins.aboutlibraries) apply false
     alias(libs.plugins.buildconfig) apply false
     alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.metro) apply false
 
     alias(libs.plugins.versionCatalogLinter)
 }
