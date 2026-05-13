@@ -53,6 +53,9 @@ fun rememberNavigator(config: SavedStateConfiguration, root: NavKey): NavigatorI
 class NavigatorImpl(override val backStack: NavBackStack<NavKey>) : Navigator {
     override fun onBack() {
         backStack.removeLastOrNull()
+        if (backStack.size > 1) {
+            backStack.removeLastOrNull()
+        }
     }
 
     override fun add(navKey: NavKey) {
