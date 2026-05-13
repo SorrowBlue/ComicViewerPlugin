@@ -24,7 +24,7 @@ import org.jetbrains.compose.resources.stringResource
 internal data object License : NavKey
 
 @Composable
-internal fun LicenseScreen(libsSource: suspend () -> String) {
+internal fun LicenseScreen(libsSource: suspend () -> String, onBackClick: () -> Unit) {
     val libs by produceLibraries { libsSource() }
     Scaffold(
         topBar = {
@@ -33,7 +33,7 @@ internal fun LicenseScreen(libsSource: suspend () -> String) {
                     Text(stringResource(Res.string.license_title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = onBackClick) {
                         Icon(MaterialSymbolsArrowBack, null)
                     }
                 },
@@ -52,8 +52,9 @@ internal fun LicenseScreen(libsSource: suspend () -> String) {
 @Preview
 private fun LicenseScreenPreview() {
     MaterialTheme {
-        LicenseScreen {
-            """
+        LicenseScreen(
+            {
+                """
                 {
                   "libraries": [
                     {
@@ -299,6 +300,8 @@ private fun LicenseScreenPreview() {
                   }
                 }
             """.trimIndent()
-        }
+            },
+            onBackClick = {}
+        )
     }
 }
