@@ -10,7 +10,8 @@ plugins {
     alias(libs.plugins.comicviewer.license)
     alias(libs.plugins.comicviewer.lint)
     alias(libs.plugins.buildconfig)
-    id("dev.hydraulic.conveyor") version "2.0"
+    alias(libs.plugins.metro)
+    alias(libs.plugins.conveyor)
 }
 
 kotlin {
@@ -22,6 +23,11 @@ kotlin {
     }
 
     sourceSets {
+        commonMain {
+            dependencies {
+                implementation(libs.compose.componentsResources)
+            }
+        }
         jvmMain {
             dependencies {
                 implementation(projects.pdf)
@@ -62,4 +68,8 @@ compose.desktop {
         }
         jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
     }
+}
+
+compose.resources {
+    packageOfResClass = "comicviewerplugin.pdf.desktop.generated.resources"
 }

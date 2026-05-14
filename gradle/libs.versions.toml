@@ -8,17 +8,22 @@ androidx-activity = "1.13.0"
 androidx-core = "1.18.0"
 androidx-lifecycle = "2.10.0"
 buildconfig = "6.0.9"
-compose-material3 = "1.11.0-alpha07"
 composeHotReload = "1.1.1"
+composeMaterial3 = "1.11.0-alpha07"
 composeMultiplatform = "1.11.0"
+conveyor = "2.0"
 detekt = "2.0.0-alpha.3"
 detekt-compose = "0.5.8"
 java = "21"
 kotlin = "2.3.21"
 kotlinx-coroutines = "1.11.0"
+kotlinx-serialization = "1.11.0"
+metro = "1.1.0"
+multiplatform-nav3-ui = "1.1.1"
 versionCatalogLinter = "1.1.0"
 
 [libraries]
+aboutlibraries-composeM3 = { group = "com.mikepenz", name = "aboutlibraries-compose-m3", version.ref = "aboutlibraries" }
 aboutlibraries-gradlePlugin = { group = "com.mikepenz.aboutlibraries.plugin", name = "com.mikepenz.aboutlibraries.plugin.gradle.plugin", version.ref = "aboutlibraries" }
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
@@ -27,7 +32,7 @@ androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 compose-componentsResources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "composeMultiplatform" }
 compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "composeMultiplatform" }
-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "compose-material3" }
+compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMaterial3" }
 compose-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "composeMultiplatform" }
 compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "composeMultiplatform" }
@@ -35,9 +40,11 @@ compose-uiTooling = { group = "org.jetbrains.compose.ui", name = "ui-tooling", v
 detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detekt-compose" }
 detekt-gradlePlugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 detekt-ktlintWrapper = { group = "dev.detekt", name = "detekt-rules-ktlint-wrapper", version.ref = "detekt" }
+jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "multiplatform-nav3-ui" }
 kotlin-compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 mupdf-kmp = { group = "com.sorrowblue.mupdf", name = "mupdf-kmp", version = "1.0.0" }
 
 [bundles]
@@ -66,6 +73,9 @@ comicviewer-lint = { id = "com.sorrowblue.comicviewer.plugin.primitive.android-l
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+conveyor = { id = "dev.hydraulic.conveyor", version.ref = "conveyor" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }

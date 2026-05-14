@@ -1,0 +1,8 @@
+<resources>
+    <string name="home_title">ComicViewer PDF Plugin</string>
+    <string name="home_msg_plugin_desc">このアプリはComicViewerのプラグインです。ComicViewerでPDFファイルを読み込むことができます。</string>
+    <string name="home_btn_app_launch">ComicViewerアプリを起動</string>
+    <string name="home_btn_license">ライセンス</string>
+
+    <string name="license_title">ライセンス</string>
+</resources>

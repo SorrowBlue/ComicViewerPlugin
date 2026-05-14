@@ -1,0 +1,8 @@
+<resources>
+    <string name="home_title">ComicViewer PDF Plugin</string>
+    <string name="home_msg_plugin_desc">This app is a plugin for ComicViewer. You can import PDF files with ComicViewer.</string>
+    <string name="home_btn_app_launch">Launch ComicViewer app</string>
+    <string name="home_btn_license">License</string>
+
+    <string name="license_title">License</string>
+</resources>

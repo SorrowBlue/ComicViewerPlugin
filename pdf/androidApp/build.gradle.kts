@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.androidApplication)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.comicviewer.detekt)
     alias(libs.plugins.comicviewer.gitTagVersion)
     alias(libs.plugins.comicviewer.license)
     alias(libs.plugins.comicviewer.lint)
+    alias(libs.plugins.metro)
 }
 
 android {
@@ -52,6 +54,7 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
+            //noinspection NotShrinkingResources
             isShrinkResources = false
             signingConfig = signingConfigs.findByName(name)
         }
@@ -66,6 +69,9 @@ android {
             )
         }
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 kotlin {
@@ -73,10 +79,15 @@ kotlin {
         vendor = JvmVendorSpec.ADOPTIUM
         languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
     }
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-parameters")
+    }
 }
 
 dependencies {
     implementation(projects.pdf)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.activity.compose)
 }
 
 aboutLibraries {
