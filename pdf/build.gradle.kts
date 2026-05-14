@@ -43,7 +43,7 @@ kotlin {
         }
     }
     compilerOptions {
-        freeCompilerArgs.set(listOf("-Xcontext-parameters"))
+        freeCompilerArgs.add("-Xcontext-parameters")
     }
     jvmToolchain {
         vendor = JvmVendorSpec.ADOPTIUM

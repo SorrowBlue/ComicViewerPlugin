@@ -80,7 +80,7 @@ kotlin {
         languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
     }
     compilerOptions {
-        freeCompilerArgs.set(listOf("-Xcontext-parameters"))
+        freeCompilerArgs.add("-Xcontext-parameters")
     }
 }
 
