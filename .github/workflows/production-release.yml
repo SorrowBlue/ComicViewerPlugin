@@ -82,7 +82,7 @@ jobs:
           mkdir gh-pages-source
           cp -r docs/. gh-pages-source/
           mv output/download.html gh-pages-source/
-          mv output/icon.png gh-pages-source/
+          mv output/icon.svg gh-pages-source/
           tar -cvf gh-pages-source.tar gh-pages-source/
       - name: Upload conveyor artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
