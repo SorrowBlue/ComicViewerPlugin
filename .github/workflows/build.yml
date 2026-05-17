@@ -20,7 +20,18 @@ jobs:
           path: pdf/androidApp/build/outputs/apk/release
 
   build-desktop:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            os: windows-latest
+            target: windows
+          - arch: amd64
+            os: ubuntu-latest
+            target: linux
+    name: ${{ matrix.target }} ${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -32,18 +43,39 @@ jobs:
           git tag "v1.0.0" "$GITHUB_SHA"
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
-      - name: Build jar
+      - name: Build jvmJar
         run: ./gradlew :pdf:desktopApp:jvmJar
+      - name: copyConveyorInputs
+        run: ./gradlew :pdf:desktopApp:writeConveyorConfig :pdf:desktopApp:copyConveyorInputs
+      - name: 'Upload artifact'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: build-${{ matrix.target }}-${{ matrix.arch }}
+          path: pdf/desktopApp/build/all-libs
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-desktop
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Download Windows build
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: build-windows-amd64
+          path: ./artifacts/windows
+      - name: Download Linux build
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: build-linux-amd64
+          path: ./artifacts/linux
       - name: Run Conveyor
         uses: hydraulic-software/conveyor/actions/build@9e90ce7c2a4356c99d68c63f41e4bc497da279c8 # v22.0
         env:
-          OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           CONVEYOR_PASSPHRASE: ${{ secrets.CONVEYOR_PASSPHRASE  }}
         with:
           command: -f ci.conveyor.conf make site
           extra_flags: '--passphrase=env:CONVEYOR_PASSPHRASE'
-          signing_key: ${{ secrets.SIGNING_KEY }}
+          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
       - name: Upload Desktop Binaries
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
