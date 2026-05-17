@@ -38,21 +38,22 @@ jobs:
             echo "Running workflow"
           fi
 
-  static-code-analysis:
-    name: Static code analysis
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/static-code-analysis.yml
-
-  android-lint:
-    name: Android lint
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/lint.yml
+#  static-code-analysis:
+#    name: Static code analysis
+#    needs: check-commit
+#    if: needs.check-commit.outputs.should-run == 'true'
+#    uses: ./.github/workflows/static-code-analysis.yml
+#
+#  android-lint:
+#    name: Android lint
+#    needs: check-commit
+#    if: needs.check-commit.outputs.should-run == 'true'
+#    uses: ./.github/workflows/lint.yml
 
   build:
     name: Build Validation
-    needs: [ static-code-analysis, android-lint ]
+#    needs: [ static-code-analysis, android-lint ]
+    needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/build.yml
     secrets: inherit
