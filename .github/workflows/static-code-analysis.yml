@@ -21,13 +21,13 @@ jobs:
       - name: 🔍️Run detekt
         run: ./gradlew ${{ matrix.task }}
       - name: Upload Detekt SARIF
-        uses: github/codeql-action/upload-sarif@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4
+        uses: github/codeql-action/upload-sarif@9e0d7b8d25671d64c341c19c0152d693099fb5ba # v4
         if: ${{ !cancelled() && matrix.task != ':build-logic:detektMain' }}
         with:
           sarif_file: build/reports/detekt/merge.sarif
           category: detekt
       - name: Upload Detekt SARIF(build-logic)
-        uses: github/codeql-action/upload-sarif@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4
+        uses: github/codeql-action/upload-sarif@9e0d7b8d25671d64c341c19c0152d693099fb5ba # v4
         if: ${{ !cancelled() && matrix.task == ':build-logic:detektMain' }}
         with:
           sarif_file: build-logic/build/reports/detekt/main.sarif
