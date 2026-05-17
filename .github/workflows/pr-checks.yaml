@@ -16,11 +16,11 @@ concurrency:
 
 permissions:
   contents: read
+  checks: read
   pull-requests: write
   security-events: write
 
 jobs:
-  # Check if this is a PR commit to main and skip if so
   check-commit:
     runs-on: ubuntu-latest
     outputs:
@@ -38,31 +38,21 @@ jobs:
             echo "Running workflow"
           fi
 
-#  static-code-analysis:
-#    name: Static code analysis
-#    needs: check-commit
-#    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: ./.github/workflows/static-code-analysis.yml
-#
-#  android-lint:
-#    name: Android lint
-#    needs: check-commit
-#    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: ./.github/workflows/lint.yml
+  lint:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: SorrowBlue/github-actions/.github/workflows/analyze-matrix.yml@main
+    with:
+      matrix-json: .github/lint-matrix.json
 
   build:
-    name: Build Validation
-#    needs: [ static-code-analysis, android-lint ]
-    needs: check-commit
+    needs: [ check-commit, lint ]
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/build.yml
     secrets: inherit
 
   allchecks:
     name: All Checks Passed
-    permissions:
-      checks: read
-      contents: read
     needs: build
     if: needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
