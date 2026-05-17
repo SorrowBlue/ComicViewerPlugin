@@ -35,7 +35,7 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
 
 private fun formatVersion(input: String): String {
     logger.lifecycle("#formatVersion input=$input")
-    return "v1.0.0"
+    return "1.0.0"
     if (input.isEmpty()) return ""
 
     // git describe の形式 (タグ)-(コミット数)-g(ハッシュ) に一致するか確認
