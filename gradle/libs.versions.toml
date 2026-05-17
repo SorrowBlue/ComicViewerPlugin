@@ -18,7 +18,7 @@ java = "21"
 kotlin = "2.3.21"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.11.0"
-metro = "1.1.0"
+metro = "1.1.1"
 multiplatform-nav3-ui = "1.1.1"
 versionCatalogLinter = "1.1.0"
 
