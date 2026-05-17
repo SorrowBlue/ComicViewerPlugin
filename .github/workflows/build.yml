@@ -26,16 +26,6 @@ jobs:
       matrix-json: .github/conveyor-build-matrix.json
       task: :pdf:desktopApp:jvmJar :pdf:desktopApp:printConveyorConfig :pdf:desktopApp:writeConveyorConfig :pdf:desktopApp:copyConveyorInputs
       environment: conveyor
-#      fetch-depth: 0
-  conveyor-build2:
-    uses: SorrowBlue/github-actions/.github/workflows/conveyor-build.yml@main
-    secrets: inherit
-    with:
-      matrix-json: .github/conveyor-build-matrix.json
-      task: :pdf:desktopApp:jvmJar :pdf:desktopApp:printConveyorConfig :pdf:desktopApp:writeConveyorConfig :pdf:desktopApp:copyConveyorInputs
-      environment: conveyor
-      fetch-depth: 0
-
 
 #  build-desktop:
 #    strategy:
