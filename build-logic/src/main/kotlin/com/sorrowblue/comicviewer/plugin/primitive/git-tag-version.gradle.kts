@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.plugin.primitive
 import java.io.ByteArrayOutputStream
 
 private val gitTagProvider = providers.of(GitTagValueSource::class) {}
-version = "v1.0.0"
+version = "1.0.0"
 //    formatVersion(gitTagProvider.get())
 
 interface GitTagParameters : ValueSourceParameters
