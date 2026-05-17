@@ -163,7 +163,7 @@ tasks.register<CopyConveyorInputsTask>("copyConveyorInputs") {
     description = "Conveyorのconfigからapp.inputsを解析し、リネームを考慮して特定のディレクトリにコピーします"
     group = "distribution"
 
-    dependsOn("writeConveyorConfig")
+    dependsOn("writeConveyorConfig", "jvmJar")
 
     configFile.set(layout.projectDirectory.file("generated.conveyor.conf"))
     outputDir.set(layout.buildDirectory.dir("all-libs"))
