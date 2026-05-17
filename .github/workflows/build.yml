@@ -36,6 +36,7 @@ jobs:
       environment: conveyor
       fetch-depth: 0
 
+
 #  build-desktop:
 #    strategy:
 #      fail-fast: false
