@@ -3,8 +3,7 @@ package com.sorrowblue.comicviewer.plugin.primitive
 import java.io.ByteArrayOutputStream
 
 private val gitTagProvider = providers.of(GitTagValueSource::class) {}
-version = "1.0.0"
-//    formatVersion(gitTagProvider.get())
+version = formatVersion(gitTagProvider.get())
 
 interface GitTagParameters : ValueSourceParameters
 
@@ -35,6 +34,7 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
 }
 
 private fun formatVersion(input: String): String {
+    logger.lifecycle("#formatVersion input=$input")
     if (input.isEmpty()) return ""
 
     // git describe の形式 (タグ)-(コミット数)-g(ハッシュ) に一致するか確認
