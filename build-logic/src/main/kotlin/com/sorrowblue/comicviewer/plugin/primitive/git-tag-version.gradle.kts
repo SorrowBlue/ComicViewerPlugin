@@ -11,6 +11,7 @@ interface GitTagParameters : ValueSourceParameters
 abstract class GitTagValueSource @Inject constructor(private val execOperations: ExecOperations) :
     ValueSource<String, GitTagParameters> {
 
+    private val logger = Logging.getLogger(GitTagValueSource::class.java)
     override fun obtain(): String = try {
         val stdout = ByteArrayOutputStream()
         val stderr = ByteArrayOutputStream()
@@ -23,11 +24,11 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
         if (result.exitValue == 0) {
             stdout.toString().trim()
         } else {
-            println("// Warning: Could not get git tag. (Exit code: ${result.exitValue})")
+            logger.warn("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
             "v1.0.0"
         }
     } catch (e: Exception) {
-        println("// Error: Failed to execute git command: ${e.message}")
+        logger.warn("Error: Failed to execute git command: ${e.message}")
         "v1.0.0"
     }
 }
