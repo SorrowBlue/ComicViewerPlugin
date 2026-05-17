@@ -90,47 +90,56 @@ abstract class CopyConveyorInputsTask @Inject constructor(
     fun run() {
         val confFile = configFile.get().asFile
         if (!confFile.exists()) {
-            throw GradleException("Conveyor generated config file not found at: ${confFile.path}")
+            throw GradleException("Conveyor config not found: ${confFile.path}")
         }
 
         val outDir = outputDir.get().asFile
-
         outDir.deleteRecursively()
         outDir.mkdirs()
 
         var isTargetSection = false
         val triggerComment = "// Inputs from dependency configurations and the JAR task."
 
-        // 1行ずつ解析
+        // 正規表現の解説:
+        // 1. (?:"([^"]+)"|([^\s"\[\],]+)) :
+        //    - "で囲まれた中身 (グループ1) OR 引用符なしの文字列 (グループ2)
+        // 2. (?:\s*->\s*(?:(?:"([^"]+)")|([^\s"\[\],]+)))? :
+        //    - オプションで "->" の後に続く 引用符あり (グループ3) OR 引用符なし (グループ4) のエイリアス
+        val regex = """(?:"([^"]+)"|([^\s"\[\],]+))(?:\s*->\s*(?:(?:"([^"]+)")|([^\s"\[\],]+)))?""".toRegex()
 
         confFile.useLines { lines ->
             lines.forEach { line ->
                 val trimmed = line.trim()
 
-                // 1. トリガーとなるコメント行を探す
+                // セクションの開始判定
                 if (!isTargetSection) {
-                    if (trimmed == triggerComment) {
-                        isTargetSection = true
-                        logger.lifecycle("Target section started.")
-                    }
-                    return@forEach // 次の行へ
+                    if (trimmed == triggerComment) isTargetSection = true
+                    return@forEach
                 }
 
-                // 3. パスとエイリアスの抽出
-                // 正規表現: "パス" -> エイリアス (エイリアスは任意)
-                val match = "\"?(.+?)\"?(?:\\s*->\\s*([^\\s,]+))?".toRegex().find(trimmed)
+                // セクション内での不要な行（コメント、空行、ブロック記号のみ）をスキップ
+                if (trimmed.isEmpty() || trimmed.startsWith("//") || trimmed == "[" || trimmed == "]") {
+                    return@forEach
+                }
 
+                // app.inputs += などの接頭辞を除去して解析しやすくする
+                val cleanLine = trimmed
+                    .replaceFirst("app.inputs\\s*\\+?=\\s*\\$\\{app\\.inputs\\}\\s*\\[".toRegex(), "")
+                    .replaceFirst("app.inputs\\s*\\+?=\\s*".toRegex(), "")
+                    .trim()
+
+                val match = regex.find(cleanLine)
                 if (match != null) {
-                    // HOCON内ではバックスラッシュがエスケープされている場合があるため置換
-                    val rawSrcPath = match.groups[1]?.value ?: return@forEach
-                    val srcPath = rawSrcPath.replace("\\\\", "\\")
+                    // グループ1(引用符あり)かグループ2(引用符なし)からパスを取得
+                    val rawSrcPath = match.groups[1]?.value ?: match.groups[2]?.value ?: return@forEach
+                    val srcPath = rawSrcPath.replace("\\\\", "\\") // Windowsエスケープ対策
 
-                    val aliasName = match.groups[2]?.value?.trim()
+                    // グループ3(引用符ありエイリアス)かグループ4(引用符なしエイリアス)からエイリアス名を取得
+                    val aliasName = match.groups[3]?.value ?: match.groups[4]?.value
 
                     val srcFile = File(srcPath)
-
                     if (srcFile.exists()) {
-                        val targetFileName = aliasName ?: srcFile.name
+                        val targetFileName = aliasName?.trim() ?: srcFile.name
                         logger.lifecycle("Copying: ${srcFile.name} -> $targetFileName")
 
                         fileSystemOperations.copy {
@@ -140,8 +149,8 @@ abstract class CopyConveyorInputsTask @Inject constructor(
                             duplicatesStrategy = DuplicatesStrategy.INCLUDE
                         }
                     } else {
-                        // GitHub Actions上でパスが解決できない場合の警告
-                        logger.warn("File not found (Skipped): $srcPath")
+                        // GitHub Actions上では絶対パスが異なる場合があるためのログ
+                        logger.warn("File not found: $srcPath")
                     }
                 }
             }
