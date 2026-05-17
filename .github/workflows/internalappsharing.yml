@@ -20,7 +20,7 @@ jobs:
     uses: SorrowBlue/github-actions/.github/workflows/android-publish.yml@main
     secrets: inherit
     with:
-      environment: android-debug
+      environment: android-release
       fetch-depth: 0
       task: bundleRelease
       package-name: com.sorrowblue.comicviewer.plugin.pdf
