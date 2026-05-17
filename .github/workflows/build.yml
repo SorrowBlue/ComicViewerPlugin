@@ -4,7 +4,7 @@ on:
 
 jobs:
 
-#  build-android:
+#  android-build:
 #    runs-on: ubuntu-latest
 #    steps:
 #      - name: Checkout
@@ -95,7 +95,7 @@ jobs:
   check-build:
     name: All Build Passed
     runs-on: ubuntu-latest
-#    needs: [ build-android, build-desktop ]
+#    needs: [ android-build, conveyor-build ]
     needs: conveyor-build
     steps:
       - name: Confirm All Build Jobs Succeeded
