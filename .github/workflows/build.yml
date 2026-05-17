@@ -27,7 +27,6 @@ jobs:
       task: :pdf:desktopApp:jvmJar :pdf:desktopApp:printConveyorConfig :pdf:desktopApp:writeConveyorConfig :pdf:desktopApp:copyConveyorInputs
       environment: conveyor
 
-
 #  build-desktop:
 #    strategy:
 #      fail-fast: false
