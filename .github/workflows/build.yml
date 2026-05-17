@@ -26,7 +26,7 @@ jobs:
       matrix-json: .github/conveyor-build-matrix.json
       task: :pdf:desktopApp:jvmJar :pdf:desktopApp:printConveyorConfig :pdf:desktopApp:writeConveyorConfig :pdf:desktopApp:copyConveyorInputs
       environment: conveyor
-      fetch-depth: 0
+#      fetch-depth: 0
 
 #  build-desktop:
 #    strategy:
