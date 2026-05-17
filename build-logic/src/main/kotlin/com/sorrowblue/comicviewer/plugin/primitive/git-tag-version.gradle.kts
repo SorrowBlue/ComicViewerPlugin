@@ -25,11 +25,11 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
         } else {
             println("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
             println("Warning: $stderr")
-            "0.0.0"
+            "v1.0.0"
         }
     } catch (e: Exception) {
         println("Error: Failed to execute git command: ${e.message}")
-        "0.0.0"
+        "v1.0.0"
     }
 }
 
