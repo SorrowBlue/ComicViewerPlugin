@@ -118,7 +118,7 @@ abstract class CopyConveyorInputsTask @Inject constructor(
 
                 // 3. パスとエイリアスの抽出
                 // 正規表現: "パス" -> エイリアス (エイリアスは任意)
-                val match = "\"(.+?)\"(?:\\s*->\\s*([^\\s,]+))?".toRegex().find(trimmed)
+                val match = "\"?(.+?)\"?(?:\\s*->\\s*([^\\s,]+))?".toRegex().find(trimmed)
 
                 if (match != null) {
                     // HOCON内ではバックスラッシュがエスケープされている場合があるため置換
