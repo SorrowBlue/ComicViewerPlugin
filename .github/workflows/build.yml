@@ -20,7 +20,7 @@ jobs:
 #          path: pdf/androidApp/build/outputs/apk/release
 
   conveyor-build:
-    uses: SorrowBlue/github-actions/.github/workflows/jconveyor-build.yml@main
+    uses: SorrowBlue/github-actions/.github/workflows/conveyor-build.yml@main
     secrets: inherit
     with:
       matrix-json: .github/conveyor-build-matrix.json
